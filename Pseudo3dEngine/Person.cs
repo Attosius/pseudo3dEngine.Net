@@ -7,6 +7,8 @@ public class Person : Drawable
 {
     public Vector2f Position { get; set; } = new Vector2f(100, 0);
     public double Fov { get; set; } = 3.14 / 3;
+    public float Radius { get; set; } = 10;
+    public Vector2f Center { get; set; }
     public float Direction { get; set; } = 0;
     public float Speed = 6f;
     public float SpeedTurn = 0.1f;
@@ -17,33 +19,33 @@ public class Person : Drawable
     public float DirectionDegree => Direction * 180 / (float)Math.PI;
 
     public void Draw(RenderTarget target, RenderStates states)
-    {
-        var radius = DrawPerson(target);
+    { 
+        DrawPerson(target);
 
-        var center = new Vector2f(Position.X + radius, Position.Y + radius);
+        Center = new Vector2f(Position.X + Radius, Position.Y + Radius);
 
         var viewSector = new Object2d();
-        viewSector.Points.Add(center);
+        viewSector.Points.Add(Center);
 
         var leftViewAngle = Direction - Fov / 2;
-        var leftPoint = GetPointAtAngleAndDistance(center, leftViewAngle, DistanceView);
+        var leftPoint = GetPointAtAngleAndDistance(Center, leftViewAngle, DistanceView);
         viewSector.Points.Add(leftPoint);
 
         var delta = Fov / 10;
         var currentAngle = leftViewAngle;
         for (int i = 0; i < 10; i++)
         {
-            var point = GetPointAtAngleAndDistance(center, currentAngle, DistanceView);
+            var point = GetPointAtAngleAndDistance(Center, currentAngle, DistanceView);
             currentAngle += delta;
             viewSector.Points.Add(point);
         }
 
         var rightViewAngle = Direction + Fov / 2;
-        var rightPoint = GetPointAtAngleAndDistance(center, rightViewAngle, DistanceView);
+        var rightPoint = GetPointAtAngleAndDistance(Center, rightViewAngle, DistanceView);
         viewSector.Points.Add(rightPoint);
         target.Draw(viewSector);
 
-        DrawDirection(target, states, center);
+        DrawDirection(target, states, Center);
     }
 
     private static Vector2f GetPointAtAngleAndDistance(Vector2f center, double angle, float distance)
@@ -65,13 +67,12 @@ public class Person : Drawable
         target.Draw(lineArr, PrimitiveType.LineStrip, states);
     }
 
-    private float DrawPerson(RenderTarget target)
+    private void DrawPerson(RenderTarget target)
     {
-        var radius = 10f;
-        var person = new CircleShape(radius);
+        var person = new CircleShape(Radius);
         person.FillColor = Color.Red;
         person.Position = Position;
         target.Draw(person);
-        return radius;
     }
+
 }
