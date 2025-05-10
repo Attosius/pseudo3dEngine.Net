@@ -15,4 +15,13 @@
     <PackageReference Include="SFML.Window" Version="2.6.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="arial.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="cour.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

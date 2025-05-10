@@ -28,7 +28,7 @@ public class MapCoordinates : Drawable
     public MapCoordinates(uint screenHeight, uint screenWidth)
     {
         //Font = new Font(@"d:\Projects\Experimentals\Pseudo3dEngine\arial.ttf");
-        Font = new Font(@"d:\Projects\Pseudo3dEngine.Net\Pseudo3dEngine\cour.ttf");
+        Font = new Font(Path.Combine(Directory.GetCurrentDirectory(), "cour.ttf"));
         for (int i = 0; i < screenHeight; i+=CellSize)
         {
             for (int j = 0; j < screenWidth; j += CellSize)

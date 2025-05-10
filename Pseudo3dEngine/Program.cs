@@ -22,8 +22,7 @@ namespace Pseudo3dEngine
 
                 var texture = new Texture(@"d:\Projects\Pseudo3dEngine.Net\Pseudo3dEngine\cold_heart.jpeg");
                 //var sprite = new Sprite(texture);
-
-                var font = new Font(@"d:\Projects\\Pseudo3dEngine.Net\Pseudo3dEngine\cour.ttf");
+                var font = new Font(Path.Combine(Directory.GetCurrentDirectory(), "cour.ttf")); 
 
                 //var circleShape = new CircleShape(50);
                 //circleShape.FillColor = Color.Green;
