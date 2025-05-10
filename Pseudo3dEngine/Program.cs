@@ -20,10 +20,10 @@ namespace Pseudo3dEngine
                 var window = new RenderWindow(videoMode, "GL HF!");
                 window.Display();
 
-                var texture = new Texture(@"d:\Projects\Experimentals\Pseudo3dEngine\cold_heart.jpeg");
+                var texture = new Texture(@"d:\Projects\Pseudo3dEngine.Net\Pseudo3dEngine\cold_heart.jpeg");
                 //var sprite = new Sprite(texture);
 
-                var font = new Font(@"d:\Projects\\Experimentals\Pseudo3dEngine\cour.ttf");
+                var font = new Font(@"d:\Projects\\Pseudo3dEngine.Net\Pseudo3dEngine\cour.ttf");
 
                 //var circleShape = new CircleShape(50);
                 //circleShape.FillColor = Color.Green;
