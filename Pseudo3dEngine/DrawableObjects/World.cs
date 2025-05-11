@@ -38,13 +38,6 @@ public class World : Drawable
         }
         target.Draw(Person);
 
-        var leftViewAngle = Person.Direction - Person.Fov / 2;
-        var deltaRay = Person.Fov / 100;
-        for (int i = 0; i < 100; i++)
-        {
-            var currentAngle = leftViewAngle + deltaRay * i;
-            var point = Helper.GetPointAtAngleAndDistance(Person.Center, currentAngle, Person.DistanceView);
-            // center, point
-        }
+       
     }
 }

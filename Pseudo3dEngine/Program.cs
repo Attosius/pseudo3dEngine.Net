@@ -51,6 +51,10 @@ namespace Pseudo3dEngine
                 {
                     Person = new Person()
                 };
+                var cameraMan = new CameraMan
+                {
+                    World = world,
+                };
                 var mapCoordinates = new MapCoordinates(ScreenHeight, ScreenWidth);
                 //var mousePosition = new MousePosition(window);
                 // Start the game loop
@@ -76,6 +80,7 @@ namespace Pseudo3dEngine
                     //window.Draw(lineArr, PrimitiveType.LineStrip);
                     //window.Draw(person);
                     window.Draw(world);
+                    window.Draw(cameraMan);
                     window.Draw(mapCoordinates);
                     ShowStatistic(elapsed, world.Person, font, window);
                     //window.Draw(mousePosition);

@@ -6,7 +6,7 @@ namespace Pseudo3dEngine.DrawableObjects;
 public class Person : Object2d
 {
     public Vector2f PersonPosition { get; set; } = new Vector2f(100, 0);
-    public double Fov { get; set; } = 3.14 / 3;
+    //public double Fov { get; set; } = 3.14 / 3;
     public float Radius { get; set; } = 10;
     public Vector2f Center { get; set; }
     public float Direction { get; set; } = 0;
@@ -14,7 +14,7 @@ public class Person : Object2d
     public float SpeedTurn = 0.1f;
 
     public float SpeedStrafe = 5f;
-    public float DistanceView = 200f;
+    //public float DistanceView = 200f;
 
     public float DirectionDegree => Direction * 180 / (float)Math.PI;
 
@@ -24,26 +24,26 @@ public class Person : Object2d
 
         Center = new Vector2f(PersonPosition.X + Radius, PersonPosition.Y + Radius);
 
-        var viewSector = new Object2d();
-        viewSector.Points.Add(Center);
+        //var viewSector = new Object2d();
+        //viewSector.Points.Add(Center);
 
-        var leftViewAngle = Direction - Fov / 2;
-        var leftPoint = Helper.GetPointAtAngleAndDistance(Center, leftViewAngle, DistanceView);
-        viewSector.Points.Add(leftPoint);
+        //var leftViewAngle = Direction - Fov / 2;
+        //var leftPoint = Helper.GetPointAtAngleAndDistance(Center, leftViewAngle, DistanceView);
+        //viewSector.Points.Add(leftPoint);
 
-        var delta = Fov / 10;
-        var currentAngle = leftViewAngle;
-        for (int i = 0; i < 10; i++)
-        {
-            var point = Helper.GetPointAtAngleAndDistance(Center, currentAngle, DistanceView);
-            currentAngle += delta;
-            viewSector.Points.Add(point);
-        }
+        //var delta = Fov / 10;
+        //var currentAngle = leftViewAngle;
+        //for (int i = 0; i < 10; i++)
+        //{
+        //    var point = Helper.GetPointAtAngleAndDistance(Center, currentAngle, DistanceView);
+        //    currentAngle += delta;
+        //    viewSector.Points.Add(point);
+        //}
 
-        var rightViewAngle = Direction + Fov / 2;
-        var rightPoint = Helper.GetPointAtAngleAndDistance(Center, rightViewAngle, DistanceView);
-        viewSector.Points.Add(rightPoint);
-        target.Draw(viewSector);
+        //var rightViewAngle = Direction + Fov / 2;
+        //var rightPoint = Helper.GetPointAtAngleAndDistance(Center, rightViewAngle, DistanceView);
+        //viewSector.Points.Add(rightPoint);
+        //target.Draw(viewSector);
 
         DrawDirection(target, states, Center);
 
