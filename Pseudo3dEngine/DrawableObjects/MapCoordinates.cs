@@ -2,7 +2,7 @@
 using SFML.Graphics;
 using SFML.System;
 
-namespace Pseudo3dEngine;
+namespace Pseudo3dEngine.DrawableObjects;
 
 public class MapCoordinates : Drawable
 {
@@ -29,7 +29,7 @@ public class MapCoordinates : Drawable
     {
         //Font = new Font(@"d:\Projects\Experimentals\Pseudo3dEngine\arial.ttf");
         Font = new Font(Path.Combine(Directory.GetCurrentDirectory(), "cour.ttf"));
-        for (int i = 0; i < screenHeight; i+=CellSize)
+        for (int i = 0; i < screenHeight; i += CellSize)
         {
             for (int j = 0; j < screenWidth; j += CellSize)
             {
@@ -60,7 +60,7 @@ public class MapCoordinates : Drawable
                     text.Position = new Vector2f(circleShape.Position.X - CellSize / 2f, circleShape.Position.Y + 2);
                     text.FillColor = Color.White;
                     target.Draw(text);
-                        
+
                 }
             }
             target.Draw(circleShape);

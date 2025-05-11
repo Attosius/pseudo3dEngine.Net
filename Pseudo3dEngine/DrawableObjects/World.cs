@@ -1,11 +1,12 @@
 ﻿using SFML.Graphics;
 using SFML.System;
 
-namespace Pseudo3dEngine;
+namespace Pseudo3dEngine.DrawableObjects;
 
 public class World : Drawable
 {
     public List<Object2d> Objects = new List<Object2d>();
+    public Person? Person { get; set; }
 
     public World()
     {
@@ -28,8 +29,22 @@ public class World : Drawable
     {
         foreach (var object2d in Objects)
         {
-
             target.Draw(object2d);
+        }
+
+        if (Person == null)
+        {
+            return;
+        }
+        target.Draw(Person);
+
+        var leftViewAngle = Person.Direction - Person.Fov / 2;
+        var deltaRay = Person.Fov / 100;
+        for (int i = 0; i < 100; i++)
+        {
+            var currentAngle = leftViewAngle + deltaRay * i;
+            var point = Helper.GetPointAtAngleAndDistance(Person.Center, currentAngle, Person.DistanceView);
+            // center, point
         }
     }
 }

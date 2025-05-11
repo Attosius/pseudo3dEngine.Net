@@ -1,11 +1,11 @@
 ﻿using SFML.Graphics;
 using SFML.System;
 
-namespace Pseudo3dEngine;
+namespace Pseudo3dEngine.DrawableObjects;
 
-public class Person : Drawable
+public class Person : Object2d
 {
-    public Vector2f Position { get; set; } = new Vector2f(100, 0);
+    public Vector2f PersonPosition { get; set; } = new Vector2f(100, 0);
     public double Fov { get; set; } = 3.14 / 3;
     public float Radius { get; set; } = 10;
     public Vector2f Center { get; set; }
@@ -18,42 +18,45 @@ public class Person : Drawable
 
     public float DirectionDegree => Direction * 180 / (float)Math.PI;
 
-    public void Draw(RenderTarget target, RenderStates states)
-    { 
+    public override void Draw(RenderTarget target, RenderStates states)
+    {
         DrawPerson(target);
 
-        Center = new Vector2f(Position.X + Radius, Position.Y + Radius);
+        Center = new Vector2f(PersonPosition.X + Radius, PersonPosition.Y + Radius);
 
         var viewSector = new Object2d();
         viewSector.Points.Add(Center);
 
         var leftViewAngle = Direction - Fov / 2;
-        var leftPoint = GetPointAtAngleAndDistance(Center, leftViewAngle, DistanceView);
+        var leftPoint = Helper.GetPointAtAngleAndDistance(Center, leftViewAngle, DistanceView);
         viewSector.Points.Add(leftPoint);
 
         var delta = Fov / 10;
         var currentAngle = leftViewAngle;
         for (int i = 0; i < 10; i++)
         {
-            var point = GetPointAtAngleAndDistance(Center, currentAngle, DistanceView);
+            var point = Helper.GetPointAtAngleAndDistance(Center, currentAngle, DistanceView);
             currentAngle += delta;
             viewSector.Points.Add(point);
         }
 
         var rightViewAngle = Direction + Fov / 2;
-        var rightPoint = GetPointAtAngleAndDistance(Center, rightViewAngle, DistanceView);
+        var rightPoint = Helper.GetPointAtAngleAndDistance(Center, rightViewAngle, DistanceView);
         viewSector.Points.Add(rightPoint);
         target.Draw(viewSector);
 
         DrawDirection(target, states, Center);
+
+        //
+        //var deltaRay = Fov / 100;
+        //for (int i = 0; i < 100; i++)
+        //{
+        //    currentAngle = leftViewAngle + deltaRay * i;
+        //    var point = Helper.GetPointAtAngleAndDistance(Center, currentAngle, DistanceView);
+        //    // center, point
+        //}
     }
 
-    private static Vector2f GetPointAtAngleAndDistance(Vector2f center, double angle, float distance)
-    {
-        var x = center.X + (float)Math.Sin(angle) * distance;
-        var y = center.Y + (float)Math.Cos(angle) * distance;
-        return new Vector2f(x, y);
-    }
 
     private void DrawDirection(RenderTarget target, RenderStates states, Vector2f center)
     {
@@ -71,7 +74,7 @@ public class Person : Drawable
     {
         var person = new CircleShape(Radius);
         person.FillColor = Color.Red;
-        person.Position = Position;
+        person.Position = PersonPosition;
         target.Draw(person);
     }
 

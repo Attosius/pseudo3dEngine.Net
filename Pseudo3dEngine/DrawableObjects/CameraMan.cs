@@ -1,7 +1,7 @@
 ﻿using SFML.Graphics;
 using SFML.System;
 
-namespace Pseudo3dEngine;
+namespace Pseudo3dEngine.DrawableObjects;
 
 public class CameraMan : Transformable, Drawable
 {
