@@ -67,7 +67,7 @@ public class Person : Object2d
             new(center),
             new(new Vector2f(xDir, yDir)),
         };
-        target.Draw(lineArr, PrimitiveType.LineStrip, states);
+        //target.Draw(lineArr, PrimitiveType.LineStrip, states);
     }
 
     private void DrawPerson(RenderTarget target)
