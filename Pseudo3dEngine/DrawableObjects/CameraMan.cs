@@ -24,45 +24,42 @@ public class CameraMan : Drawable
         var person = World.Person;
         Center = person.Center;
 
-        DrawViewSector(target, person);
+        var viewSector = new Object2d();
+        viewSector.Points.Add(Center);
+        //DrawViewSector(target, person);
 
-        var accurancy = 25;
+        var raysCount = 25;
 
         var leftViewAngle = person.Direction - Fov / 2;
-        var deltaRay = Fov / accurancy;
-        for (int i = 0; i < accurancy; i++)
+        var deltaRay = Fov / raysCount;
+        for (var i = 0; i < raysCount; i++)
         {
             var currentAngle = leftViewAngle + deltaRay * i;
             var point = Helper.GetPointAtAngleAndDistance(Center, currentAngle, DistanceView);
-            // center, point
-            var lineArr = new Vertex[]
-            {
-                new Vertex(Center),
-                new Vertex(point)
-            };
-            target.Draw(lineArr, PrimitiveType.LineStrip);
+            var isCross = false;
             var segmentRay = (first: Center, second: point);
             foreach (var wordObject in World.Objects)
             {
                 var points = wordObject.Points;
                 var segmentObj = (first: points[^1], second: points[0]); // points[points.Count - 1]
-                
-                for (int j = 0; j < points.Count; j++)
+                for (var j = 0; j < points.Count; j++)
                 {
-                    var isSegmentsCrossing = IsSegmentsCrossing(segmentRay, segmentObj, out Vector2f crossPoint);
-                    if (isSegmentsCrossing)
+                    isCross = IsSegmentsCrossing(segmentRay, segmentObj, out Vector2f crossPoint);
+                    if (isCross)
                     {
                         //Console.WriteLine($"For line {i}, cross in {crossPoint.X:0.00}, {crossPoint.Y:0.00}");
-                        var crossShape = new CircleShape(5);
-                        crossShape.FillColor = Color.Green;
-                        crossShape.Position = crossPoint - new Vector2f(5, 5);
+                        //var crossShape = new CircleShape(5);
+                        //crossShape.FillColor = Color.Green;
+                        //crossShape.Position = crossPoint - new Vector2f(5, 5);
 
-                        var text = new Text($"j = {j}", Font, 8);
-                        text.Position = crossPoint;
-                        text.FillColor = Color.White;
-                        target.Draw(text);
+                        //var text = new Text($"j = {j}", Font, 8);
+                        //text.Position = crossPoint;
+                        //text.FillColor = Color.White;
+                        //target.Draw(text);
 
-                        target.Draw(crossShape);
+                        //target.Draw(crossShape);
+                        point = crossPoint;
+                        break;
                     }
 
                     if (j + 1 == points.Count)
@@ -71,9 +68,67 @@ public class CameraMan : Drawable
                     }
                     segmentObj = (first: points[j], second: points[j+1]);
                 }
+
+                if (isCross)
+                {
+                    break;
+                }
             }
+
+            // center, point
+            var lineArr = new Vertex[]
+            {
+                new Vertex(Center),
+                new Vertex(point)
+            };
+            viewSector.Points.Add(point);
+            target.Draw(lineArr, PrimitiveType.LineStrip);
         }
 
+        //viewSector.Points.Add(Center);
+
+        //leftViewAngle = person.Direction - Fov / 2;
+        //var leftPoint = Helper.GetPointAtAngleAndDistance(Center, leftViewAngle, DistanceView);
+        //viewSector.Points.Add(leftPoint);
+
+        //var delta = Fov / 10;
+        //currentAngle = leftViewAngle;
+        //for (int i = 0; i < 10; i++)
+        //{
+        //    var point = Helper.GetPointAtAngleAndDistance(Center, currentAngle, DistanceView);
+        //    currentAngle += delta;
+        //    viewSector.Points.Add(point);
+        //}
+
+        //var rightViewAngle = person.Direction + Fov / 2;
+        //var rightPoint = Helper.GetPointAtAngleAndDistance(Center, rightViewAngle, DistanceView);
+        //viewSector.Points.Add(rightPoint);
+        for (int i = 0; i < viewSector.Points.Count-2; i++)
+        {
+            var obj2d = new Object2d();
+            obj2d.FillColor = new Color(255, 175, 200, 70);
+            obj2d.OutlineThickness = 0;
+            obj2d.Points.Add(Center);
+            obj2d.Points.Add(viewSector.Points[i + 1]);
+            obj2d.Points.Add(viewSector.Points[i + 2]);
+            target.Draw(obj2d);
+        }
+
+        for (int i = 0; i < viewSector.Points.Count; i++)
+        {
+            var crossShape = new CircleShape(5);
+            crossShape.FillColor = Color.Green;
+            crossShape.Position = viewSector.Points[i] - new Vector2f(5, 5);
+            target.Draw(crossShape);
+
+            var text = new Text($"{i}", Font, 12);
+            text.Position = viewSector.Points[i];
+            text.FillColor = Color.White;
+            target.Draw(text);
+
+        }
+
+        //target.Draw(viewSector);
     }
 
     //class Vector2f
@@ -148,11 +203,11 @@ public class CameraMan : Drawable
 
 
     // Вычисляем точку пересечения
-        vector2F.X = segment1.first.X + directionVector1.X * t;
-        vector2F.Y = segment1.first.Y + directionVector1.Y * t;
+        //vector2F.X = segment1.first.X + directionVector1.X * t;
+        //vector2F.Y = segment1.first.Y + directionVector1.Y * t;
 
-        //vector2F.X = segment1.first.X + directionVector1.X * Math.Abs(crossProduct3) / Math.Abs(crossProduct4 - crossProduct3);
-        //vector2F.Y = segment1.first.Y + directionVector1.Y * Math.Abs(crossProduct3) / Math.Abs(crossProduct4 - crossProduct3);
+        vector2F.X = segment1.first.X + directionVector1.X * Math.Abs(crossProduct3) / Math.Abs(crossProduct4 - crossProduct3);
+        vector2F.Y = segment1.first.Y + directionVector1.Y * Math.Abs(crossProduct3) / Math.Abs(crossProduct4 - crossProduct3);
 
         return true;
     }

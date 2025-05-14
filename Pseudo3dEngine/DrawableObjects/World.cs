@@ -10,14 +10,19 @@ public class World : Drawable
 
     public World()
     {
-        var square = new Object2d();
+        var square = new Object2d
+        {
+            Name = "Small"
+        };
         square.Points.Add(new Vector2f(25, 150));
         square.Points.Add(new Vector2f(100, 150));
         square.Points.Add(new Vector2f(100, 200));
         square.Points.Add(new Vector2f(25, 200));
         Objects.Add(square);
-
-        square = new Object2d();
+        square = new Object2d
+        {
+            Name = "Rect"
+        };
         square.Points.Add(new Vector2f(150, 150));
         square.Points.Add(new Vector2f(250, 150));
         square.Points.Add(new Vector2f(250, 175));
@@ -30,8 +35,10 @@ public class World : Drawable
         square.Points.Add(new Vector2f(550, 275));
         square.Points.Add(new Vector2f(350, 275));
         Objects.Add(square);
-
-        square = new Object2d();
+        square = new Object2d
+        {
+            Name = "Five"
+        };
         square.Points.Add(new Vector2f(250, 450));
         square.Points.Add(new Vector2f(350, 550));
         square.Points.Add(new Vector2f(350, 575));
