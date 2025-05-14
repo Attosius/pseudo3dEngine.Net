@@ -15,14 +15,35 @@ public class World : Drawable
         square.Points.Add(new Vector2f(100, 150));
         square.Points.Add(new Vector2f(100, 200));
         square.Points.Add(new Vector2f(25, 200));
-
-        var square2 = new Object2d();
-        square2.Points.Add(new Vector2f(150, 150));
-        square2.Points.Add(new Vector2f(250, 150));
-        square2.Points.Add(new Vector2f(250, 175));
-        square2.Points.Add(new Vector2f(150, 175));
         Objects.Add(square);
-        Objects.Add(square2);
+
+        square = new Object2d();
+        square.Points.Add(new Vector2f(150, 150));
+        square.Points.Add(new Vector2f(250, 150));
+        square.Points.Add(new Vector2f(250, 175));
+        square.Points.Add(new Vector2f(150, 175));
+        Objects.Add(square);
+
+        square = new Object2d();
+        square.Points.Add(new Vector2f(350, 150));
+        square.Points.Add(new Vector2f(550, 250));
+        square.Points.Add(new Vector2f(550, 275));
+        square.Points.Add(new Vector2f(350, 275));
+        Objects.Add(square);
+
+        square = new Object2d();
+        square.Points.Add(new Vector2f(250, 450));
+        square.Points.Add(new Vector2f(350, 550));
+        square.Points.Add(new Vector2f(350, 575));
+        square.Points.Add(new Vector2f(250, 575));
+        square.Points.Add(new Vector2f(150, 475));
+        Objects.Add(square);
+
+        square = new Object2d();
+        square.Points.Add(new Vector2f(350, 650));
+        square.Points.Add(new Vector2f(350, 750));
+        square.Points.Add(new Vector2f(250, 775));
+        Objects.Add(square);
     }
 
     public void Draw(RenderTarget target, RenderStates states)

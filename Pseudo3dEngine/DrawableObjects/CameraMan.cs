@@ -7,7 +7,7 @@ namespace Pseudo3dEngine.DrawableObjects;
 
 public class CameraMan : Drawable
 {
-    public float DistanceView = 200f;
+    public float DistanceView = 500f;
 
     public double Fov { get; set; } = 3.14 / 3;
 
@@ -26,10 +26,11 @@ public class CameraMan : Drawable
 
         DrawViewSector(target, person);
 
+        var accurancy = 25;
 
         var leftViewAngle = person.Direction - Fov / 2;
-        var deltaRay = Fov / 2;
-        for (int i = 0; i < 2; i++)
+        var deltaRay = Fov / accurancy;
+        for (int i = 0; i < accurancy; i++)
         {
             var currentAngle = leftViewAngle + deltaRay * i;
             var point = Helper.GetPointAtAngleAndDistance(Center, currentAngle, DistanceView);
@@ -45,12 +46,13 @@ public class CameraMan : Drawable
             {
                 var points = wordObject.Points;
                 var segmentObj = (first: points[^1], second: points[0]); // points[points.Count - 1]
-                for (int j = 0; j < points.Count-1; j++)
+                
+                for (int j = 0; j < points.Count; j++)
                 {
                     var isSegmentsCrossing = IsSegmentsCrossing(segmentRay, segmentObj, out Vector2f crossPoint);
                     if (isSegmentsCrossing)
                     {
-                        Console.WriteLine($"For line {i}, cross in {crossPoint.X:0.00}, {crossPoint.Y:0.00}");
+                        //Console.WriteLine($"For line {i}, cross in {crossPoint.X:0.00}, {crossPoint.Y:0.00}");
                         var crossShape = new CircleShape(5);
                         crossShape.FillColor = Color.Green;
                         crossShape.Position = crossPoint - new Vector2f(5, 5);
@@ -61,6 +63,11 @@ public class CameraMan : Drawable
                         target.Draw(text);
 
                         target.Draw(crossShape);
+                    }
+
+                    if (j + 1 == points.Count)
+                    {
+                        break;
                     }
                     segmentObj = (first: points[j], second: points[j+1]);
                 }
@@ -94,23 +101,23 @@ public class CameraMan : Drawable
         var directionVector1 = segment1.second - segment1.first;
         var directionVector2 = segment2.second - segment2.first;
         float denominator = Cross(directionVector1, directionVector2);
-        if (Math.Abs(denominator) < Epsilon)
-        {
-            // Отрезки параллельны или коллинеарны. Проверяем, пересекаются ли проекции.
-            if (Math.Max(segment1.first.X, segment1.second.X) < Math.Min(segment2.first.X, segment2.second.X) ||
-                Math.Max(segment1.first.Y, segment1.second.Y) < Math.Min(segment2.first.Y, segment2.second.Y) ||
-                Math.Max(segment2.first.X, segment2.second.X) < Math.Min(segment1.first.X, segment1.second.X) ||
-                Math.Max(segment2.first.Y, segment2.second.Y) < Math.Min(segment1.first.Y, segment1.second.Y))
-            {
-                // Отрезки не пересекаются
-                return false;
-            }
+        //if (Math.Abs(denominator) < Epsilon)
+        //{
+        //    // Отрезки параллельны или коллинеарны. Проверяем, пересекаются ли проекции.
+        //    if (Math.Max(segment1.first.X, segment1.second.X) < Math.Min(segment2.first.X, segment2.second.X) ||
+        //        Math.Max(segment1.first.Y, segment1.second.Y) < Math.Min(segment2.first.Y, segment2.second.Y) ||
+        //        Math.Max(segment2.first.X, segment2.second.X) < Math.Min(segment1.first.X, segment1.second.X) ||
+        //        Math.Max(segment2.first.Y, segment2.second.Y) < Math.Min(segment1.first.Y, segment1.second.Y))
+        //    {
+        //        // Отрезки не пересекаются
+        //        return false;
+        //    }
 
-            // Отрезки коллинеарны и пересекаются.  Нужно выбрать точку пересечения.
-            // (Выбор точки зависит от требований к задаче)
-            vector2F = segment1.first; // Пример: возвращаем первую точку первого отрезка
-            return true;
-        }
+        //    // Отрезки коллинеарны и пересекаются.  Нужно выбрать точку пересечения.
+        //    // (Выбор точки зависит от требований к задаче)
+        //    vector2F = segment1.first; // Пример: возвращаем первую точку первого отрезка
+        //    return true;
+        //}
 
         var crossProduct1 = Cross(directionVector1, segment2.first - segment1.first);
         var crossProduct2 = Cross(directionVector1, segment2.second - segment1.first);
@@ -137,8 +144,15 @@ public class CameraMan : Drawable
         //vector2F.X = segment1.first.X + directionVector1.X * t;
         //vector2F.Y = segment1.first.Y + directionVector1.Y * t;
 
-        vector2F.X = segment1.first.X + directionVector1.X * Math.Abs(crossProduct3) / Math.Abs(crossProduct4 - crossProduct3);
-        vector2F.Y = segment1.first.Y + directionVector1.Y * Math.Abs(crossProduct3) / Math.Abs(crossProduct4 - crossProduct3);
+           float t = crossProduct3 / denominator;
+
+
+    // Вычисляем точку пересечения
+        vector2F.X = segment1.first.X + directionVector1.X * t;
+        vector2F.Y = segment1.first.Y + directionVector1.Y * t;
+
+        //vector2F.X = segment1.first.X + directionVector1.X * Math.Abs(crossProduct3) / Math.Abs(crossProduct4 - crossProduct3);
+        //vector2F.Y = segment1.first.Y + directionVector1.Y * Math.Abs(crossProduct3) / Math.Abs(crossProduct4 - crossProduct3);
 
         return true;
     }
