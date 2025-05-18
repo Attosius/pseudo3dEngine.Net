@@ -46,7 +46,6 @@ namespace Pseudo3dEngine
                 //    new Vertex(new Vector2f(50, 10))
                 //};
                 
-                var sw = new Stopwatch();
                 var world = new World
                 {
                     Person = new Person()
@@ -58,11 +57,38 @@ namespace Pseudo3dEngine
                 var mapCoordinates = new MapCoordinates(ScreenHeight, ScreenWidth);
                 //var mousePosition = new MousePosition(window);
                 // Start the game loop
+                var sw = Stopwatch.StartNew();
+                var frameCount = 0;
+                var fps = 0d;
+                var targetFps = 60d; // Задайте желаемый FPS
+                var timeOneFrame = 1000 / targetFps; // time in ms
+
+                var lastTime = sw.ElapsedMilliseconds;
+                var lastFpsCalculationTime = 0d;
                 while (window.IsOpen)
                 {
-                    var elapsed = sw.ElapsedMilliseconds / (double)1000;
-                    sw.Restart();
-                    Thread.Sleep(10);
+                    var currentTime = sw.ElapsedMilliseconds;
+                    var elapsedTime = currentTime - lastTime;
+
+
+
+
+
+                    //frameCount++;
+                    //if (frameCount > 70 && sw.ElapsedMilliseconds < 1000)
+                    //{
+                    //    continue;
+                    //}
+                    //if (sw.ElapsedMilliseconds > 1000)
+                    //{
+                    //    fps = frameCount;
+                    //    frameCount = 0;
+                    //    sw.Restart();
+                    //}
+                    
+                    //var elapsed = sw.ElapsedMilliseconds / (double)1000;
+                    //sw.Restart();
+                    //Thread.Sleep(10);
 
                     window.DispatchEvents();
                     window.Closed += (sender, _) => ((RenderWindow)sender!).Close();
@@ -82,7 +108,15 @@ namespace Pseudo3dEngine
                     window.Draw(world);
                     window.Draw(cameraMan);
                     window.Draw(mapCoordinates);
-                    ShowStatistic(elapsed, world.Person, font, window);
+
+                    frameCount++;
+                    if (sw.Elapsed.TotalSeconds - lastFpsCalculationTime > 1.0)
+                    {
+                        fps = frameCount / (sw.Elapsed.TotalSeconds - lastFpsCalculationTime);
+                        lastFpsCalculationTime = sw.Elapsed.TotalSeconds;
+                        frameCount = 0;
+                    }
+                    ShowStatistic(fps, world.Person, font, window);
                     //window.Draw(mousePosition);
 
                     window.Display();
@@ -158,9 +192,9 @@ namespace Pseudo3dEngine
             }
         }
 
-        private static void ShowStatistic(double elapsed, Person person, Font font, RenderWindow window)
+        private static void ShowStatistic(double fps, Person person, Font font, RenderWindow window)
         {
-            var fps = 1d / elapsed;
+            //var fps = 1d / elapsed;
             //Console.WriteLine(fps);
             var position = Mouse.GetPosition(window);
             var text = new Text($"PersonPosition: X ({person.Center.X:000.0}) Y ({person.Center.Y:000.0})," +
