@@ -51,6 +51,10 @@ public class World : Drawable
         square.Points.Add(new Vector2f(350, 750));
         square.Points.Add(new Vector2f(250, 775));
         Objects.Add(square);
+
+        var circle2d = new Circle2d(50);
+        circle2d.SetCenter(new Vector2f(150, 300));
+        Objects.Add(circle2d);
     }
 
     public void Draw(RenderTarget target, RenderStates states)
