@@ -31,7 +31,7 @@ public class CameraMan : Drawable
         viewSector.Points.Add(Center);
         //DrawViewSector(target, person);
 
-        var raysCount = 250;
+        var raysCount = 233;
         // todo check all segm, take one
         var leftViewAngle = person.Direction - Fov / 2;
         var deltaRay = Fov / raysCount;

@@ -18,25 +18,32 @@ public class Object2d : Drawable
 
     public virtual bool IsRayCrossingObject((Vector2f first, Vector2f second) segmentRay, out Vector2f crossPoint)
     {
-        var points = Points;
         crossPoint = default;
-        var isCross = false; 
-        var segmentObj = (first: points[^1], second: points[0]); // points[points.Count - 1]
-        for (var j = 0; j < points.Count; j++)
+        var isCross = false;
+        var distance = float.MaxValue;
+        var segmentObj = (first: Points[^1], second: Points[0]); // points[points.Count - 1]
+        for (var j = 0; j < Points.Count; j++)
         {
-            isCross = IsSegmentsCrossing(segmentRay, segmentObj, out crossPoint);
-            if (isCross)
-            {
-                break;
-            }
+            var isCurrentCross = IsSegmentsCrossing(segmentRay, segmentObj, out var currentCrossPoint);
 
-            if (j + 1 == points.Count)
+            if (isCurrentCross)
+            {
+                isCross = true;
+                var currentDistance = Math.Abs(currentCrossPoint.X - segmentRay.first.X) + Math.Abs(currentCrossPoint.Y - segmentRay.first.Y);
+                if (currentDistance < distance)
+                {
+                    distance = currentDistance;
+                    crossPoint = currentCrossPoint;
+                }
+            }
+            
+            if (j + 1 == Points.Count)
             {
                 break;
             }
-            segmentObj = (first: points[j], second: points[j + 1]);
+            segmentObj = (first: Points[j], second: Points[j + 1]);
         }
-
+        
         return isCross;
     }
 

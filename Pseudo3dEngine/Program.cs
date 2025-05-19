@@ -63,15 +63,23 @@ namespace Pseudo3dEngine
                 var targetFps = 60d; // Задайте желаемый FPS
                 var timeOneFrame = 1000 / targetFps; // time in ms
 
-                var lastTime = sw.ElapsedMilliseconds;
+                var lastTime = sw.Elapsed.TotalSeconds;
                 var lastFpsCalculationTime = 0d;
                 while (window.IsOpen)
                 {
-                    var currentTime = sw.ElapsedMilliseconds;
+                    var currentTime = sw.Elapsed.TotalSeconds;
                     var elapsedTime = currentTime - lastTime;
 
 
-
+                    // Ограничение FPS (опционально). Упрощенный вариант. Более точные методы требуют более сложной реализации
+                    double sleepTime = timeOneFrame - (elapsedTime * 1000);
+                    if (sleepTime > 0)
+                    {
+                        Thread.Sleep((int)sleepTime);
+                        currentTime = sw.Elapsed.TotalSeconds; // Обновляем currentTime после сна
+                        elapsedTime = currentTime - lastTime;
+                    }
+                    lastTime = currentTime;
 
 
                     //frameCount++;
@@ -85,7 +93,7 @@ namespace Pseudo3dEngine
                     //    frameCount = 0;
                     //    sw.Restart();
                     //}
-                    
+
                     //var elapsed = sw.ElapsedMilliseconds / (double)1000;
                     //sw.Restart();
                     //Thread.Sleep(10);
@@ -93,7 +101,7 @@ namespace Pseudo3dEngine
                     window.DispatchEvents();
                     window.Closed += (sender, _) => ((RenderWindow)sender!).Close();
                     
-                    InputEvents(world.Person, mapCoordinates);
+                    InputEvents(world.Person, mapCoordinates, elapsedTime);
 
                     window.Clear();
                     
@@ -129,7 +137,7 @@ namespace Pseudo3dEngine
             }
         }
 
-        private static void InputEvents(Person person, MapCoordinates mapCoordinates)
+        private static void InputEvents(Person person, MapCoordinates mapCoordinates, double elapsedTime)
         {
             if (Keyboard.IsKeyPressed(Keyboard.Key.W))
             {
