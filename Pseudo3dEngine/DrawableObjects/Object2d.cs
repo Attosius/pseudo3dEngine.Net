@@ -21,6 +21,10 @@ public class Object2d : Drawable
         crossPoint = default;
         var isCross = false;
         var distance = float.MaxValue;
+        if (Name == "Five")
+        {
+
+        }
         var segmentObj = (first: Points[^1], second: Points[0]); // points[points.Count - 1]
         for (var j = 0; j < Points.Count; j++)
         {
@@ -29,7 +33,8 @@ public class Object2d : Drawable
             if (isCurrentCross)
             {
                 isCross = true;
-                var currentDistance = Math.Abs(currentCrossPoint.X - segmentRay.first.X) + Math.Abs(currentCrossPoint.Y - segmentRay.first.Y);
+                //var currentDistance = Math.Abs(currentCrossPoint.X - segmentRay.first.X) + Math.Abs(currentCrossPoint.Y - segmentRay.first.Y);
+                var currentDistance = segmentRay.first.ManhattanDistance(currentCrossPoint);
                 if (currentDistance < distance)
                 {
                     distance = currentDistance;

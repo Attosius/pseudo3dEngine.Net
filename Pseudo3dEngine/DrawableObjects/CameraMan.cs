@@ -8,7 +8,7 @@ namespace Pseudo3dEngine.DrawableObjects;
 
 public class CameraMan : Drawable
 {
-    public float DistanceView = 500f;
+    public float DistanceView = 800f;
     public static int Counter = 0;
     public List<long> Ticks = new(100);
     public double Fov { get; set; } = 3.14 / 3;
@@ -31,7 +31,7 @@ public class CameraMan : Drawable
         viewSector.Points.Add(Center);
         //DrawViewSector(target, person);
 
-        var raysCount = 233;
+        var raysCount = 5;
         // todo check all segm, take one
         var leftViewAngle = person.Direction - Fov / 2;
         var deltaRay = Fov / raysCount;
@@ -41,12 +41,18 @@ public class CameraMan : Drawable
             var currentAngle = leftViewAngle + deltaRay * i;
             var point = Helper.GetPointAtAngleAndDistance(Center, currentAngle, DistanceView);
             var segmentRay = (first: Center, second: point);
+            var distanceToObject = float.MaxValue;
             foreach (var wordObject in World.Objects)
             {
                 if (wordObject.IsRayCrossingObject(segmentRay, out var crossPoint))
                 {
-                    point = crossPoint;
-                    break;
+                    var currentDistance = segmentRay.first.ManhattanDistance(crossPoint);
+                    if (currentDistance < distanceToObject)
+                    {
+                        distanceToObject = currentDistance;
+                        point = crossPoint;
+                    }
+                    //break;
                 }
             }
 

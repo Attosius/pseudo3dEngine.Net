@@ -20,6 +20,10 @@ namespace Pseudo3dEngine
         {
             return new Vector2f(a.X * (float)num, a.Y * (float)num);
         }
+        public static float  ManhattanDistance(this Vector2f a, Vector2f b)
+        {
+            return Math.Abs(b.X - a.X) + Math.Abs(b.Y - a.Y);
+        }
 
     }
 }
