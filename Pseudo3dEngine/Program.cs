@@ -60,7 +60,7 @@ namespace Pseudo3dEngine
                 var sw = Stopwatch.StartNew();
                 var frameCount = 0;
                 var fps = 0d;
-                var targetFps = 60d; // Задайте желаемый FPS
+                var targetFps = 100d; // Задайте желаемый FPS
                 var timeOneFrame = 1000 / targetFps; // time in ms
 
                 var lastTime = sw.Elapsed.TotalSeconds;
@@ -73,14 +73,34 @@ namespace Pseudo3dEngine
 
                     // Ограничение FPS (опционально). Упрощенный вариант. Более точные методы требуют более сложной реализации
                     double sleepTime = timeOneFrame - (elapsedTime * 1000);
+                    Console.WriteLine($"elapsedTime before:{elapsedTime * 1000:0.000}");
                     if (sleepTime > 0)
                     {
-                        Thread.Sleep((int)sleepTime);
+                        //Console.WriteLine($"sleepTime:{sleepTime:0.000}, {elapsedTime * 1000:0.000}");
+                        //Thread.Sleep(TimeSpan.FromMilliseconds(sleepTime));
+                        var endTime = sw.Elapsed.TotalMilliseconds + sleepTime;
+                        //Console.WriteLine($"from:{sw.Elapsed.TotalMilliseconds:0.000}, to {endTime:0.000}");
+                        while (sw.Elapsed.TotalMilliseconds < endTime)
+                        {
+                            // Может быть добавлена небольшая задержка для уменьшения нагрузки на CPU,
+                            // но это снизит точность.  Thread.Yield() может быть полезен здесь.
+                             Thread.Yield();
+                        }
+
                         currentTime = sw.Elapsed.TotalSeconds; // Обновляем currentTime после сна
                         elapsedTime = currentTime - lastTime;
-                    }
+                    } 
+                    //Console.WriteLine($"elapsedTime after:{elapsedTime * 1000:0.000}");
                     lastTime = currentTime;
 
+                    frameCount++;
+                    if (sw.Elapsed.TotalSeconds - lastFpsCalculationTime > 1.0)
+                    {
+                        fps = frameCount / (sw.Elapsed.TotalSeconds - lastFpsCalculationTime);
+                        Console.WriteLine($"FPS:{frameCount}, {sw.Elapsed.TotalSeconds}, {lastFpsCalculationTime}");
+                        lastFpsCalculationTime = sw.Elapsed.TotalSeconds;
+                        frameCount = 0;
+                    }
 
                     //frameCount++;
                     //if (frameCount > 70 && sw.ElapsedMilliseconds < 1000)
@@ -113,17 +133,11 @@ namespace Pseudo3dEngine
                     //window.Draw(cam);
                     //window.Draw(lineArr, PrimitiveType.LineStrip);
                     //window.Draw(person);
+
                     window.Draw(world);
                     window.Draw(cameraMan);
                     window.Draw(mapCoordinates);
 
-                    frameCount++;
-                    if (sw.Elapsed.TotalSeconds - lastFpsCalculationTime > 1.0)
-                    {
-                        fps = frameCount / (sw.Elapsed.TotalSeconds - lastFpsCalculationTime);
-                        lastFpsCalculationTime = sw.Elapsed.TotalSeconds;
-                        frameCount = 0;
-                    }
                     ShowStatistic(fps, world.Person, font, window);
                     //window.Draw(mousePosition);
 

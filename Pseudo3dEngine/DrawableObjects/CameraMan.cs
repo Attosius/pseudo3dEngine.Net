@@ -31,7 +31,7 @@ public class CameraMan : Drawable
         viewSector.Points.Add(Center);
         //DrawViewSector(target, person);
 
-        var raysCount = 5;
+        var raysCount = 1000;
         // todo check all segm, take one
         var leftViewAngle = person.Direction - Fov / 2;
         var deltaRay = Fov / raysCount;
@@ -68,7 +68,7 @@ public class CameraMan : Drawable
         Ticks.Add(sw.ElapsedTicks);
         if (Counter % 100 == 0)
         {
-            Console.WriteLine($"Middle {Ticks.Sum() / Ticks.Count: 0.00} Sw {sw.ElapsedTicks:0.000}");
+            //Console.WriteLine($"Middle {Ticks.Sum() / Ticks.Count: 0.00} Sw {sw.ElapsedTicks:0.000}");
             Ticks = new List<long>(100);
         }
         sw.Restart();
@@ -107,12 +107,12 @@ public class CameraMan : Drawable
             var crossShape = new CircleShape(5);
             crossShape.FillColor = Color.Green;
             crossShape.Position = viewSector.Points[i] - new Vector2f(5, 5);
-            target.Draw(crossShape);
+            //target.Draw(crossShape);
 
             var text = new Text($"{i}", Font, 12);
             text.Position = viewSector.Points[i];
             text.FillColor = Color.White;
-            target.Draw(text);
+            //target.Draw(text);
 
         }
 

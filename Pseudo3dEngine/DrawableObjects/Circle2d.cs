@@ -39,17 +39,22 @@ public class Circle2d : Object2d
         double t1 = (-kB + Math.Sqrt(discriminant)) / (2 * kA);
         double t2 = (-kB - Math.Sqrt(discriminant)) / (2 * kA);
 
-        //Vector2f cross1 = default;
+        var distance = float.MaxValue;
 
         if (t1 is >= 0 and <= 1)
         {
             crossPoint = start + direction.ScalarMult(t1);
-            return true;
+            distance = segmentRay.first.ManhattanDistance(crossPoint);
+            isCross = true;
         }
         if (t2 is >= 0 and <= 1)
         {
-            crossPoint = start + direction.ScalarMult(t2);
-            return true;
+            var cross2 = start + direction.ScalarMult(t2);
+            if (segmentRay.first.ManhattanDistance(cross2) < distance)
+            {
+                crossPoint = cross2;
+            }
+            isCross = true;
         }
 
 
