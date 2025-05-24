@@ -73,10 +73,10 @@ namespace Pseudo3dEngine
 
                     // Ограничение FPS (опционально). Упрощенный вариант. Более точные методы требуют более сложной реализации
                     double sleepTime = timeOneFrame - (elapsedTime * 1000);
-                    Console.WriteLine($"elapsedTime before:{elapsedTime * 1000:0.000}");
-                    if (sleepTime > 0)
+                    //Console.WriteLine($"elapsedTime before:{elapsedTime * 1000:0.000}, {timeOneFrame}, {sleepTime}");
+                    if (sleepTime > 2)
                     {
-                        //Console.WriteLine($"sleepTime:{sleepTime:0.000}, {elapsedTime * 1000:0.000}");
+                        //Console.WriteLine($"111:{sleepTime:0.000}, {elapsedTime * 1000:0.000}");
                         //Thread.Sleep(TimeSpan.FromMilliseconds(sleepTime));
                         var endTime = sw.Elapsed.TotalMilliseconds + sleepTime;
                         //Console.WriteLine($"from:{sw.Elapsed.TotalMilliseconds:0.000}, to {endTime:0.000}");
@@ -90,17 +90,9 @@ namespace Pseudo3dEngine
                         currentTime = sw.Elapsed.TotalSeconds; // Обновляем currentTime после сна
                         elapsedTime = currentTime - lastTime;
                     } 
-                    //Console.WriteLine($"elapsedTime after:{elapsedTime * 1000:0.000}");
+                    Console.WriteLine($"elapsedTime after:{elapsedTime * 1000:0.000}");
                     lastTime = currentTime;
 
-                    frameCount++;
-                    if (sw.Elapsed.TotalSeconds - lastFpsCalculationTime > 1.0)
-                    {
-                        fps = frameCount / (sw.Elapsed.TotalSeconds - lastFpsCalculationTime);
-                        Console.WriteLine($"FPS:{frameCount}, {sw.Elapsed.TotalSeconds}, {lastFpsCalculationTime}");
-                        lastFpsCalculationTime = sw.Elapsed.TotalSeconds;
-                        frameCount = 0;
-                    }
 
                     //frameCount++;
                     //if (frameCount > 70 && sw.ElapsedMilliseconds < 1000)
@@ -121,7 +113,7 @@ namespace Pseudo3dEngine
                     window.DispatchEvents();
                     window.Closed += (sender, _) => ((RenderWindow)sender!).Close();
                     
-                    InputEvents(world.Person, mapCoordinates, elapsedTime);
+                    InputEvents(world.Person, mapCoordinates, (float)elapsedTime);
 
                     window.Clear();
                     
@@ -138,6 +130,14 @@ namespace Pseudo3dEngine
                     window.Draw(cameraMan);
                     window.Draw(mapCoordinates);
 
+                    frameCount++;
+                    if (sw.Elapsed.TotalSeconds - lastFpsCalculationTime > 1.0)
+                    {
+                        fps = frameCount / (sw.Elapsed.TotalSeconds - lastFpsCalculationTime);
+                        Console.WriteLine($"FPS:{frameCount}, {sw.Elapsed.TotalSeconds}, {lastFpsCalculationTime}");
+                        lastFpsCalculationTime = sw.Elapsed.TotalSeconds;
+                        frameCount = 0;
+                    }
                     ShowStatistic(fps, world.Person, font, window);
                     //window.Draw(mousePosition);
 
@@ -151,35 +151,36 @@ namespace Pseudo3dEngine
             }
         }
 
-        private static void InputEvents(Person person, MapCoordinates mapCoordinates, double elapsedTime)
+        private static void InputEvents(Person person, MapCoordinates mapCoordinates, float elapsedTime)
         {
+            var speedFpsCoef = 40;
             if (Keyboard.IsKeyPressed(Keyboard.Key.W))
             {
                 var personPosition = person.PersonPosition;
-                personPosition.X += (float)Math.Sin(person.Direction) * person.Speed;
-                personPosition.Y += (float)Math.Cos(person.Direction) * person.Speed;
+                personPosition.X += (float)Math.Sin(person.Direction) * person.Speed * elapsedTime * speedFpsCoef;
+                personPosition.Y += (float)Math.Cos(person.Direction) * person.Speed * elapsedTime * speedFpsCoef;
                 person.PersonPosition = personPosition;
             }
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.S))
             {
                 var personPosition = person.PersonPosition;
-                personPosition.X -= (float)Math.Sin(person.Direction) * person.Speed;
-                personPosition.Y -= (float)Math.Cos(person.Direction) * person.Speed;
+                personPosition.X -= (float)Math.Sin(person.Direction) * person.Speed * elapsedTime * speedFpsCoef;
+                personPosition.Y -= (float)Math.Cos(person.Direction) * person.Speed * elapsedTime * speedFpsCoef;
                 person.PersonPosition = personPosition;
             }
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.Up))
             {
                 var personPosition = person.PersonPosition;
-                personPosition.Y -= person.SpeedStrafe;
+                personPosition.Y -= person.SpeedStrafe * elapsedTime * speedFpsCoef;
                 person.PersonPosition = personPosition;
             }
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.Down))
             {
                 var personPosition = person.PersonPosition;
-                personPosition.Y += person.SpeedStrafe;
+                personPosition.Y += person.SpeedStrafe * elapsedTime * speedFpsCoef;
                 person.PersonPosition = personPosition;
             }
 
@@ -187,14 +188,14 @@ namespace Pseudo3dEngine
             if (Keyboard.IsKeyPressed(Keyboard.Key.Left))
             {
                 var personPosition = person.PersonPosition;
-                personPosition.X -= person.SpeedStrafe;
+                personPosition.X -= person.SpeedStrafe * elapsedTime * speedFpsCoef;
                 person.PersonPosition = personPosition;
             }
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.Right))
             {
                 var personPosition = person.PersonPosition;
-                personPosition.X += person.SpeedStrafe;
+                personPosition.X += person.SpeedStrafe * elapsedTime * speedFpsCoef;
                 person.PersonPosition = personPosition;
             }
 

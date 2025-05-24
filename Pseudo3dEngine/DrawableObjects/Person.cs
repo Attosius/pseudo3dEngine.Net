@@ -10,7 +10,7 @@ public class Person : Object2d
     public float Radius { get; set; } = 10;
     public Vector2f Center { get; set; }
     public float Direction { get; set; } = -125.54f*(float)Math.PI / 180;
-    public float Speed = 6f;
+    public float Speed = 10f;
     public float SpeedTurn = 0.1f;
 
     public float SpeedStrafe = 5f;
