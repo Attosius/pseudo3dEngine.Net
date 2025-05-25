@@ -23,7 +23,6 @@ namespace Pseudo3dEngine
 
                 var texture = new Texture(@"d:\Projects\Pseudo3dEngine.Net\Pseudo3dEngine\cold_heart.jpeg");
                 //var sprite = new Sprite(texture);
-                var font = new Font(Path.Combine(Directory.GetCurrentDirectory(), "cour.ttf")); 
 
                 //var circleShape = new CircleShape(50);
                 //circleShape.FillColor = Color.Green;
@@ -60,7 +59,7 @@ namespace Pseudo3dEngine
                 var sw = Stopwatch.StartNew();
                 var frameCount = 0;
                 var fps = 0d;
-                var targetFps = 100d; // Задайте желаемый FPS
+                var targetFps = 60d; // Задайте желаемый FPS
                 var timeOneFrame = 1000 / targetFps; // time in ms
 
                 var lastTime = sw.Elapsed.TotalSeconds;
@@ -76,7 +75,7 @@ namespace Pseudo3dEngine
                     //Console.WriteLine($"elapsedTime before:{elapsedTime * 1000:0.000}, {timeOneFrame}, {sleepTime}");
                     if (sleepTime > 2)
                     {
-                        //Console.WriteLine($"111:{sleepTime:0.000}, {elapsedTime * 1000:0.000}");
+                        //Console.WriteLine($"SleepTime:{sleepTime:0.000}, {elapsedTime * 1000:0.000}");
                         //Thread.Sleep(TimeSpan.FromMilliseconds(sleepTime));
                         var endTime = sw.Elapsed.TotalMilliseconds + sleepTime;
                         //Console.WriteLine($"from:{sw.Elapsed.TotalMilliseconds:0.000}, to {endTime:0.000}");
@@ -90,7 +89,7 @@ namespace Pseudo3dEngine
                         currentTime = sw.Elapsed.TotalSeconds; // Обновляем currentTime после сна
                         elapsedTime = currentTime - lastTime;
                     } 
-                    Console.WriteLine($"elapsedTime after:{elapsedTime * 1000:0.000}");
+                    //Console.WriteLine($"elapsedTime after:{elapsedTime * 1000:0.000}");
                     lastTime = currentTime;
 
 
@@ -138,7 +137,7 @@ namespace Pseudo3dEngine
                         lastFpsCalculationTime = sw.Elapsed.TotalSeconds;
                         frameCount = 0;
                     }
-                    ShowStatistic(fps, world.Person, font, window);
+                    ShowStatistic(fps, world.Person, window);
                     //window.Draw(mousePosition);
 
                     window.Display();
@@ -153,34 +152,33 @@ namespace Pseudo3dEngine
 
         private static void InputEvents(Person person, MapCoordinates mapCoordinates, float elapsedTime)
         {
-            var speedFpsCoef = 40;
             if (Keyboard.IsKeyPressed(Keyboard.Key.W))
             {
                 var personPosition = person.PersonPosition;
-                personPosition.X += (float)Math.Sin(person.Direction) * person.Speed * elapsedTime * speedFpsCoef;
-                personPosition.Y += (float)Math.Cos(person.Direction) * person.Speed * elapsedTime * speedFpsCoef;
+                personPosition.X += (float)Math.Sin(person.Direction) * person.Speed * elapsedTime;
+                personPosition.Y += (float)Math.Cos(person.Direction) * person.Speed * elapsedTime;
                 person.PersonPosition = personPosition;
             }
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.S))
             {
                 var personPosition = person.PersonPosition;
-                personPosition.X -= (float)Math.Sin(person.Direction) * person.Speed * elapsedTime * speedFpsCoef;
-                personPosition.Y -= (float)Math.Cos(person.Direction) * person.Speed * elapsedTime * speedFpsCoef;
+                personPosition.X -= (float)Math.Sin(person.Direction) * person.Speed * elapsedTime;
+                personPosition.Y -= (float)Math.Cos(person.Direction) * person.Speed * elapsedTime;
                 person.PersonPosition = personPosition;
             }
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.Up))
             {
                 var personPosition = person.PersonPosition;
-                personPosition.Y -= person.SpeedStrafe * elapsedTime * speedFpsCoef;
+                personPosition.Y -= person.SpeedStrafe * elapsedTime;
                 person.PersonPosition = personPosition;
             }
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.Down))
             {
                 var personPosition = person.PersonPosition;
-                personPosition.Y += person.SpeedStrafe * elapsedTime * speedFpsCoef;
+                personPosition.Y += person.SpeedStrafe * elapsedTime;
                 person.PersonPosition = personPosition;
             }
 
@@ -188,25 +186,25 @@ namespace Pseudo3dEngine
             if (Keyboard.IsKeyPressed(Keyboard.Key.Left))
             {
                 var personPosition = person.PersonPosition;
-                personPosition.X -= person.SpeedStrafe * elapsedTime * speedFpsCoef;
+                personPosition.X -= person.SpeedStrafe * elapsedTime;
                 person.PersonPosition = personPosition;
             }
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.Right))
             {
                 var personPosition = person.PersonPosition;
-                personPosition.X += person.SpeedStrafe * elapsedTime * speedFpsCoef;
+                personPosition.X += person.SpeedStrafe * elapsedTime;
                 person.PersonPosition = personPosition;
             }
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.A))
             {
-                person.Direction += person.SpeedTurn;
+                person.Direction += person.SpeedTurn * elapsedTime;
             }
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.D))
             {
-                person.Direction -= person.SpeedTurn;
+                person.Direction -= person.SpeedTurn * elapsedTime;
             }
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.M))
@@ -215,13 +213,13 @@ namespace Pseudo3dEngine
             }
         }
 
-        private static void ShowStatistic(double fps, Person person, Font font, RenderWindow window)
+        private static void ShowStatistic(double fps, Person person, RenderWindow window)
         {
             //var fps = 1d / elapsed;
             //Console.WriteLine(fps);
             var position = Mouse.GetPosition(window);
             var text = new Text($"PersonPosition: X ({person.Center.X:000.0}) Y ({person.Center.Y:000.0})," +
-                                $" angle: {person.DirectionDegree:000.00}, FPS: {fps:00.00}, Mouse: ({position.X},{position.Y})", font, 12);
+                                $" angle: {person.DirectionDegree:000.00}, FPS: {fps:00.00}, Mouse: ({position.X},{position.Y})", Resources.FontCourerNew, 12);
             text.Position = new Vector2f(300, 0);
             text.FillColor = Color.White;
             //text.OutlineThickness = 0.1f;

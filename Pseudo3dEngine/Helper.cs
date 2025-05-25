@@ -1,9 +1,4 @@
 ﻿using SFML.System;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pseudo3dEngine
 {
@@ -24,6 +19,5 @@ namespace Pseudo3dEngine
         {
             return Math.Abs(b.X - a.X) + Math.Abs(b.Y - a.Y);
         }
-
     }
 }

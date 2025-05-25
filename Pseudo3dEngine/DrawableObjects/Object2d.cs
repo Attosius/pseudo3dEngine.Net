@@ -8,13 +8,21 @@ namespace Pseudo3dEngine.DrawableObjects;
 public class Object2d : Drawable
 {
     public static int Counter = 0;
-    
+
     public List<Vector2f> Points = new();
     public string Name = $"NewObj_{++Counter}";
     public Vector2f Position = new(0, 0);
     public Color FillColor = new Color(255, 175, 174, 100);
     public Color OutlineColor = new Color(255, 255, 255);
     public float OutlineThickness = 2;
+    public Vector2f Scale = new Vector2f(1, 1);
+
+
+    public Object2d()
+    {
+    }
+
+    public Object2dTypes Type { get; set; }
 
     public virtual bool IsRayCrossingObject((Vector2f first, Vector2f second) segmentRay, out Vector2f crossPoint)
     {
@@ -41,14 +49,14 @@ public class Object2d : Drawable
                     crossPoint = currentCrossPoint;
                 }
             }
-            
+
             if (j + 1 == Points.Count)
             {
                 break;
             }
             segmentObj = (first: Points[j], second: Points[j + 1]);
         }
-        
+
         return isCross;
     }
 
@@ -65,6 +73,16 @@ public class Object2d : Drawable
         convexShape.OutlineThickness = OutlineThickness;
         convexShape.OutlineColor = OutlineColor;
         convexShape.Position = Position;
+
+        if (Type == Object2dTypes.Wall)
+        {
+            var text = new Text($"{Name}", Resources.FontCourerNew, 12);
+            text.Position = Points[0];
+            text.CharacterSize = 14;
+            text.FillColor = Color.White;
+            //target.Draw(text);
+        }
+        
         target.Draw(convexShape);
     }
 

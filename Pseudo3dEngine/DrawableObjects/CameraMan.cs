@@ -8,14 +8,13 @@ namespace Pseudo3dEngine.DrawableObjects;
 
 public class CameraMan : Drawable
 {
-    public float DistanceView = 800f;
+    public float DistanceView = 400f;
     public static int Counter = 0;
     public List<long> Ticks = new(100);
-    public double Fov { get; set; } = 3.14 / 3;
+    public double Fov { get; set; } = 3.14 / 2;
 
     public Vector2f Center { get; set; }
     public World? World { get; set; }
-    public Font Font = new Font(Path.Combine(Directory.GetCurrentDirectory(), "cour.ttf"));
 
     public void Draw(RenderTarget target, RenderStates states)
     {
@@ -25,14 +24,22 @@ public class CameraMan : Drawable
             return;
         }
         var person = World.Person;
+        DrawViewSector(target, person);
+        DrawViewSector(target, person.GetMappedPerson());
+
+        //target.Draw(viewSector);
+    }
+
+    private void DrawViewSector(RenderTarget target, Person person)
+    {
         Center = person.Center;
 
         var viewSector = new Object2d();
         viewSector.Points.Add(Center);
         //DrawViewSector(target, person);
 
-        var raysCount = 1000;
-        // todo check all segm, take one
+        var raysCount = 640;
+
         var leftViewAngle = person.Direction - Fov / 2;
         var deltaRay = Fov / raysCount;
         var sw = Stopwatch.StartNew();
@@ -52,46 +59,20 @@ public class CameraMan : Drawable
                         distanceToObject = currentDistance;
                         point = crossPoint;
                     }
-                    //break;
                 }
             }
 
-            // center, point
-            //var lineArr = new Vertex[]
-            //{
-            //    new Vertex(Center),
-            //    new Vertex(point)
-            //};
             viewSector.Points.Add(point);
-            //target.Draw(lineArr, PrimitiveType.LineStrip);
         }
-        Ticks.Add(sw.ElapsedTicks);
-        if (Counter % 100 == 0)
-        {
-            //Console.WriteLine($"Middle {Ticks.Sum() / Ticks.Count: 0.00} Sw {sw.ElapsedTicks:0.000}");
-            Ticks = new List<long>(100);
-        }
-        sw.Restart();
 
-        //viewSector.Points.Add(Center);
-
-        //leftViewAngle = person.Direction - Fov / 2;
-        //var leftPoint = Helper.GetPointAtAngleAndDistance(Center, leftViewAngle, DistanceView);
-        //viewSector.Points.Add(leftPoint);
-
-        //var delta = Fov / 10;
-        //currentAngle = leftViewAngle;
-        //for (int i = 0; i < 10; i++)
+        //Ticks.Add(sw.ElapsedTicks);
+        //if (Counter % 100 == 0)
         //{
-        //    var point = Helper.GetPointAtAngleAndDistance(Center, currentAngle, DistanceView);
-        //    currentAngle += delta;
-        //    viewSector.Points.Add(point);
+        //    Console.WriteLine($"Middle {Ticks.Sum() / Ticks.Count: 0.00} Sw {sw.ElapsedTicks:0.000}");
+        //    Ticks = new List<long>(100);
         //}
-
-        //var rightViewAngle = person.Direction + Fov / 2;
-        //var rightPoint = Helper.GetPointAtAngleAndDistance(Center, rightViewAngle, DistanceView);
-        //viewSector.Points.Add(rightPoint);
-        for (int i = 0; i < viewSector.Points.Count-2; i++)
+        sw.Restart();
+        for (int i = 0; i < viewSector.Points.Count - 2; i++)
         {
             var obj2d = new Object2d();
             obj2d.FillColor = new Color(255, 175, 200, 70);
@@ -104,19 +85,16 @@ public class CameraMan : Drawable
 
         for (int i = 0; i < viewSector.Points.Count; i++)
         {
-            var crossShape = new CircleShape(5);
+            var crossShape = new CircleShape(1);
             crossShape.FillColor = Color.Green;
-            crossShape.Position = viewSector.Points[i] - new Vector2f(5, 5);
-            //target.Draw(crossShape);
+            crossShape.Position = viewSector.Points[i] - new Vector2f(1, 1);
+            target.Draw(crossShape);
 
-            var text = new Text($"{i}", Font, 12);
-            text.Position = viewSector.Points[i];
-            text.FillColor = Color.White;
+            //var text = new Text($"{i}", Resources.FontCourerNew, 12);
+            //text.Position = viewSector.Points[i];
+            //text.FillColor = Color.White;
             //target.Draw(text);
-
         }
-
-        //target.Draw(viewSector);
     }
 
     //class Vector2f

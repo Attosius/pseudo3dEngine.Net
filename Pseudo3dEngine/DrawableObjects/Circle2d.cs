@@ -75,12 +75,23 @@ public class Circle2d : Object2d
         crossShape.FillColor = FillColor;
         crossShape.OutlineThickness = OutlineThickness;
         crossShape.OutlineColor = OutlineColor;
+        //crossShape.Scale = Scale;
         target.Draw(crossShape);
 
-        crossShape = new CircleShape(4);
-        crossShape.Position = Center - new Vector2f(4, 4);
+        crossShape = new CircleShape(2);
+        crossShape.Position = Center - new Vector2f(2, 2);
         crossShape.FillColor = Color.White;
+        //crossShape.Scale = Scale;
         target.Draw(crossShape);
+
+        if (Type == Object2dTypes.Wall)
+        {
+            var text = new Text($"{Name}", Resources.FontCourerNew, 12);
+            text.Position = Center;
+            text.CharacterSize = 14;
+            text.FillColor = Color.White;
+            target.Draw(text);
+        }
     }
 
 }
