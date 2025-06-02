@@ -18,7 +18,7 @@ public class Person : Object2d
     public float SpeedStrafe = 200f;
     //public float DistanceView = 200f;
 
-    public Person GetMappedPerson()
+    public Person GetScaledForMapPerson()
     {
         var mappedPerson = Copy();
         var scale = 0.2f;

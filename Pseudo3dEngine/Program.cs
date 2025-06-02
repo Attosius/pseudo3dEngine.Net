@@ -9,21 +9,17 @@ namespace Pseudo3dEngine
 {
     public class Program
     {
-        public static uint ScreenHeight = 1200;
-        public static uint ScreenWidth = 800;
-
         static void Main(string[] args)
         {
             try
             {
                 Console.WriteLine("Hello, World!");
-                var videoMode = new VideoMode(ScreenHeight, ScreenWidth);
+                var videoMode = new VideoMode(Resources.ScreenWidth, Resources.ScreenHeight);
                 var window = new RenderWindow(videoMode, "GL HF!");
                 window.Display();
 
                 var texture = new Texture(@"d:\Projects\Pseudo3dEngine.Net\Pseudo3dEngine\cold_heart.jpeg");
-                //var sprite = new Sprite(texture);
-
+               
                 //var circleShape = new CircleShape(50);
                 //circleShape.FillColor = Color.Green;
                 
@@ -53,7 +49,7 @@ namespace Pseudo3dEngine
                 {
                     World = world,
                 };
-                var mapCoordinates = new MapCoordinates(ScreenHeight, ScreenWidth);
+                var mapCoordinates = new MapCoordinates(Resources.ScreenWidth, Resources.ScreenHeight);
                 //var mousePosition = new MousePosition(window);
                 // Start the game loop
                 var sw = Stopwatch.StartNew();
@@ -125,8 +121,8 @@ namespace Pseudo3dEngine
                     //window.Draw(lineArr, PrimitiveType.LineStrip);
                     //window.Draw(person);
 
-                    window.Draw(world);
                     window.Draw(cameraMan);
+                    window.Draw(world);
                     window.Draw(mapCoordinates);
 
                     frameCount++;

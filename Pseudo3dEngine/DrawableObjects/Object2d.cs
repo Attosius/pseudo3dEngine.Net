@@ -12,7 +12,7 @@ public class Object2d : Drawable
     public List<Vector2f> Points = new();
     public string Name = $"NewObj_{++Counter}";
     public Vector2f Position = new(0, 0);
-    public Color FillColor = new Color(255, 175, 174, 100);
+    public Color FillColor = new Color(255, 175, 174, 0);
     public Color OutlineColor = new Color(255, 255, 255);
     public float OutlineThickness = 2;
     public Vector2f Scale = new Vector2f(1, 1);
@@ -80,6 +80,8 @@ public class Object2d : Drawable
             text.Position = Points[0];
             text.CharacterSize = 14;
             text.FillColor = Color.White;
+            convexShape.FillColor = Color.Red;
+
             //target.Draw(text);
         }
         

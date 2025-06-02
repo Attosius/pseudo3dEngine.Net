@@ -1,6 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
 using SFML.Graphics;
 using SFML.System;
 
@@ -10,10 +8,11 @@ public class CameraMan : Drawable
 {
     public float DistanceView = 400f;
     public static int Counter = 0;
+    public static int RaysCount = 100;
     public List<long> Ticks = new(100);
     public double Fov { get; set; } = 3.14 / 2;
 
-    public Vector2f Center { get; set; }
+    public Vector2f Center { get; set; } // changed to map / person
     public World? World { get; set; }
 
     public void Draw(RenderTarget target, RenderStates states)
@@ -24,32 +23,70 @@ public class CameraMan : Drawable
             return;
         }
         var person = World.Person;
-        DrawViewSector(target, person);
-        DrawViewSector(target, person.GetMappedPerson());
-
+        DrawViewSector(target, person, Object2dTypes.Wall);
+        DrawViewSector(target, person.GetScaledForMapPerson(), Object2dTypes.MapWall);
+        DrawSky(target);
         //target.Draw(viewSector);
     }
 
-    private void DrawViewSector(RenderTarget target, Person person)
+    private void DrawSky(RenderTarget target)
     {
+
+        //var sky = new Object2d()
+        //{
+        //    Name = "Sky",
+        //    Scale = new Vector2f(0.5f, 0.5f),
+        //    Type = Object2dTypes.Sky,
+        //    FillColor = new Color(93, 214, 255, 95),
+        //    OutlineThickness = 0
+        //};
+        //sky.Points.Add(new Vector2f(0, 0));
+        //sky.Points.Add(new Vector2f(Resources.ScreenWidth, 0));
+        //sky.Points.Add(new Vector2f(Resources.ScreenWidth, Resources.SkyHeight));
+        //sky.Points.Add(new Vector2f(0, Resources.SkyHeight));
+        //target.Draw(sky);
+
+        var sprite = new Sprite(Resources.TextureSky, new IntRect(0, 0, (int)Resources.ScreenWidth, (int)Resources.SkyHeight));
+        sprite.Color = new Color(255, 255, 255, 195);
+        target.Draw(sprite);
+
+        var floor = new Object2d()
+        {
+            Name = "Floor",
+            Scale = new Vector2f(0.5f, 0.5f),
+            Type = Object2dTypes.Floor,
+            FillColor = new Color(255, 219, 128, 95),
+            OutlineThickness = 0
+        };
+        floor.Points.Add(new Vector2f(0, Resources.SkyHeight));
+        floor.Points.Add(new Vector2f(Resources.ScreenWidth, Resources.SkyHeight));
+        floor.Points.Add(new Vector2f(Resources.ScreenWidth, Resources.ScreenHeight));
+        floor.Points.Add(new Vector2f(0, Resources.ScreenHeight));
+        target.Draw(floor);
+    }
+
+    private void DrawViewSector(RenderTarget target, Person person, Object2dTypes object2dTypes)
+    {
+        if (World == null)
+        {
+            return;
+        }
         Center = person.Center;
 
         var viewSector = new Object2d();
         viewSector.Points.Add(Center);
-        //DrawViewSector(target, person);
-
-        var raysCount = 640;
 
         var leftViewAngle = person.Direction - Fov / 2;
-        var deltaRay = Fov / raysCount;
+        var deltaRay = Fov / RaysCount;
         var sw = Stopwatch.StartNew();
-        for (var i = 0; i < raysCount; i++)
+        var objectsToCheck = World.Objects.Where(o => o.Type == object2dTypes).ToList();
+        for (var i = 0; i < RaysCount; i++)
         {
             var currentAngle = leftViewAngle + deltaRay * i;
             var point = Helper.GetPointAtAngleAndDistance(Center, currentAngle, DistanceView);
             var segmentRay = (first: Center, second: point);
             var distanceToObject = float.MaxValue;
-            foreach (var wordObject in World.Objects)
+            foreach (var wordObject in objectsToCheck)
             {
                 if (wordObject.IsRayCrossingObject(segmentRay, out var crossPoint))
                 {
@@ -72,6 +109,8 @@ public class CameraMan : Drawable
         //    Ticks = new List<long>(100);
         //}
         sw.Restart();
+
+        // shape on view sector
         for (int i = 0; i < viewSector.Points.Count - 2; i++)
         {
             var obj2d = new Object2d();
@@ -83,6 +122,7 @@ public class CameraMan : Drawable
             target.Draw(obj2d);
         }
 
+        // green points on horizont
         for (int i = 0; i < viewSector.Points.Count; i++)
         {
             var crossShape = new CircleShape(1);
@@ -96,166 +136,5 @@ public class CameraMan : Drawable
             //target.Draw(text);
         }
     }
-
-    //class Vector2f
-    //{
-    //    public Vector2f(float x, float y)
-    //    {
-    //        this.X = x;
-    //        this.Y = y;
-    //    }
-    //    public float X;
-    //    public float Y;
-    //    public static Vector2f operator -(Vector2f v1, Vector2f v2) => new Vector2f(v1.X - v2.X, v1.Y - v2.Y);
-    //}
-
-    //private const double Epsilon = 1e-6;
-
-    //private static bool DoubleEquals(double a, double b)
-    //{
-    //    return Math.Abs(a - b) < Epsilon;
-    //}
-
-    //private static bool IsSegmentsCrossing((Vector2f first, Vector2f second) segment1, (Vector2f first, Vector2f second) segment2, out Vector2f vector2F)
-    //{
-    //    vector2F = new Vector2f(0, 0);
-    //    var directionVector1 = segment1.second - segment1.first;
-    //    var directionVector2 = segment2.second - segment2.first;
-
-    //    float denominator = Cross(directionVector1, directionVector2);
-
-    //    #region параллельность не проверяем
-
-    //    // более точное вычисление при параллельности и коллинеарности
-    //    //if (Math.Abs(denominator) < Epsilon)
-    //    //{
-    //    //    // Отрезки параллельны или коллинеарны. Проверяем, пересекаются ли проекции.
-    //    //    if (Math.Max(segment1.first.X, segment1.second.X) < Math.Min(segment2.first.X, segment2.second.X) ||
-    //    //        Math.Max(segment1.first.Y, segment1.second.Y) < Math.Min(segment2.first.Y, segment2.second.Y) ||
-    //    //        Math.Max(segment2.first.X, segment2.second.X) < Math.Min(segment1.first.X, segment1.second.X) ||
-    //    //        Math.Max(segment2.first.Y, segment2.second.Y) < Math.Min(segment1.first.Y, segment1.second.Y))
-    //    //    {
-    //    //        // Отрезки не пересекаются
-    //    //        return false;
-    //    //    }
-
-    //    //    // Отрезки коллинеарны и пересекаются.  Нужно выбрать точку пересечения.
-    //    //    // (Выбор точки зависит от требований к задаче)
-    //    //    vector2F = segment1.first; // Пример: возвращаем первую точку первого отрезка
-    //    //    return true;
-    //    //}
-    //    #endregion
     
-
-    //    var crossProduct1 = Cross(directionVector1, segment2.first - segment1.first);
-    //    var crossProduct2 = Cross(directionVector1, segment2.second - segment1.first);
-
-    //    if (Sign(crossProduct1) == Sign(crossProduct2) || DoubleEquals(crossProduct1, 0.0) || DoubleEquals(crossProduct2, 0.0))
-    //    {
-    //        return false;
-    //    }
-
-    //    var crossProduct3 = Cross(directionVector2, segment1.first - segment2.first);
-    //    var crossProduct4 = Cross(directionVector2, segment1.second - segment2.first);
-
-    //    if (Sign(crossProduct3) == Sign(crossProduct4) || DoubleEquals(crossProduct3, 0.0)|| DoubleEquals(crossProduct4, 0.0))
-    //    {
-    //        return false;
-    //    }
-
-        
-    //    var t = crossProduct3 / denominator;
-    //    // Вычисляем точку пересечения
-    //    vector2F.X = segment1.first.X + directionVector1.X * t;
-    //    vector2F.Y = segment1.first.Y + directionVector1.Y * t;
-
-    //    // вариант с хабра, немного медленней
-    //    // if (DoubleEquals(crossProduct1, crossProduct2))
-    //    //{
-    //    //    //// fix divizion by zero
-    //    //    return false;
-    //    //}
-    //    //vector2F.X = segment1.first.X + directionVector1.X * Math.Abs(crossProduct3) / Math.Abs(crossProduct4 - crossProduct3);
-    //    //vector2F.Y = segment1.first.Y + directionVector1.Y * Math.Abs(crossProduct3) / Math.Abs(crossProduct4 - crossProduct3);
-
-    //    return true;
-    //}
-
-
-
-    //public static float Cross(Vector2f a, Vector2f b)
-    //{
-    //    return a.X * b.Y - a.Y * b.X;
-    //}
-
-    //public static int Sign(float a)
-    //{
-    //    if (a > 0)
-    //    {
-    //        return 1;
-    //    }
-
-    //    if (a < 0)
-    //    {
-    //        return -1;
-    //    }
-    //    return 0;
-
-    //}
-
-    // Функция для проверки, лежит ли точка на отрезке
-    //private static bool IsPointOnSegment(Vector2f point, (Vector2f first, Vector2f second) segment)
-    //{
-    //    var cross = Cross(segment.second - segment.first, point - segment.first);
-    //    if (!DoubleEquals(cross, 0d))
-    //    {
-    //        return false;
-    //    }
-
-    //    return point.X >= Math.Min(segment.first.X, segment.second.X) - Epsilon &&
-    //           point.X <= Math.Max(segment.first.X, segment.second.X) + Epsilon &&
-    //           point.Y >= Math.Min(segment.first.Y, segment.second.Y) - Epsilon &&
-    //           point.Y <= Math.Max(segment.first.Y, segment.second.Y) + Epsilon;
-    //}
-
-
-    // Функция для проверки, лежит ли точка на отрезке
-    //private static bool is_point_on_segment(Vector2f point, (Vector2f first, Vector2f second) segment)
-    //{
-    //    // Сначала проверим, что точка коллинеарна отрезку
-    //    if (!DoubleEquals(cross(segment.second - segment.first, point - segment.first), 0.0))
-    //    {
-    //        return false; // Не коллинеарна
-    //    }
-
-    //    // Теперь проверим, что точка лежит между концами отрезка (по каждой координате)
-    //    return (point.X >= Math.Min(segment.first.X, segment.second.X) - Epsilon &&
-    //            point.X <= Math.Max(segment.first.X, segment.second.X) + Epsilon &&
-    //            point.Y >= Math.Min(segment.first.Y, segment.second.Y) - Epsilon &&
-    //            point.Y <= Math.Max(segment.first.Y, segment.second.Y) + Epsilon);
-    //}
-
-    //private void DrawViewSector(RenderTarget target, Person person)
-    //{
-    //    var viewSector = new Object2d();
-    //    viewSector.Points.Add(Center);
-
-    //    var leftViewAngle = person.Direction - Fov / 2;
-    //    var leftPoint = Helper.GetPointAtAngleAndDistance(Center, leftViewAngle, DistanceView);
-    //    viewSector.Points.Add(leftPoint);
-
-    //    var delta = Fov / 10;
-    //    var currentAngle = leftViewAngle;
-    //    for (int i = 0; i < 10; i++)
-    //    {
-    //        var point = Helper.GetPointAtAngleAndDistance(Center, currentAngle, DistanceView);
-    //        currentAngle += delta;
-    //        viewSector.Points.Add(point);
-    //    }
-
-    //    var rightViewAngle = person.Direction + Fov / 2;
-    //    var rightPoint = Helper.GetPointAtAngleAndDistance(Center, rightViewAngle, DistanceView);
-    //    viewSector.Points.Add(rightPoint);
-    //    target.Draw(viewSector);
-    //}
 }

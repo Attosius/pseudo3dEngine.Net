@@ -19,10 +19,10 @@ public class World : Drawable
             Scale = new Vector2f(0.5f, 0.5f),
             Type = Object2dTypes.Wall
         };
-        square.Points.Add(new Vector2f(25, 150));
-        square.Points.Add(new Vector2f(100, 150));
-        square.Points.Add(new Vector2f(100, 200));
-        square.Points.Add(new Vector2f(25, 200));
+        square.Points.Add(new Vector2f(125, 150));
+        square.Points.Add(new Vector2f(200, 150));
+        square.Points.Add(new Vector2f(200, 200));
+        square.Points.Add(new Vector2f(125, 200));
         Objects.Add(square);
 
         var squareScaled = new Object2d
@@ -30,7 +30,7 @@ public class World : Drawable
             Name = "SmallScale",
             FillColor = Color.Red,
             //Position = positionMapShift,
-            Type = Object2dTypes.Wall
+            Type = Object2dTypes.MapWall
         };
         square.Points.ForEach(o => squareScaled.Points.Add(new Vector2f(o.X * scale, o.Y * scale)));
         Objects.Add(squareScaled);
@@ -43,10 +43,10 @@ public class World : Drawable
             Scale = new Vector2f(0.5f, 0.5f),
             Type = Object2dTypes.Wall
         };
-        square.Points.Add(new Vector2f(150, 150));
         square.Points.Add(new Vector2f(250, 150));
+        square.Points.Add(new Vector2f(350, 150));
+        square.Points.Add(new Vector2f(350, 175));
         square.Points.Add(new Vector2f(250, 175));
-        square.Points.Add(new Vector2f(150, 175));
         Objects.Add(square);
 
         squareScaled = new Object2d
@@ -54,7 +54,7 @@ public class World : Drawable
             Name = "RectScale",
             FillColor = Color.Red,
             //Position = positionMapShift,
-            Type = Object2dTypes.Wall
+            Type = Object2dTypes.MapWall
         };
         square.Points.ForEach(o => squareScaled.Points.Add(new Vector2f(o.X * scale, o.Y * scale)));
         Objects.Add(squareScaled);
@@ -66,17 +66,17 @@ public class World : Drawable
             Scale = new Vector2f(0.5f, 0.5f),
             Type = Object2dTypes.Wall
         }; ;
-        square.Points.Add(new Vector2f(350, 150));
-        square.Points.Add(new Vector2f(550, 250));
-        square.Points.Add(new Vector2f(550, 275));
-        square.Points.Add(new Vector2f(350, 275));
+        square.Points.Add(new Vector2f(450, 150));
+        square.Points.Add(new Vector2f(650, 250));
+        square.Points.Add(new Vector2f(650, 275));
+        square.Points.Add(new Vector2f(450, 275));
         Objects.Add(square);
 
         squareScaled = new Object2d
         {
             Name = "ThirdScale",
             FillColor = Color.Red,
-            Type = Object2dTypes.Wall
+            Type = Object2dTypes.MapWall
         };
         square.Points.ForEach(o => squareScaled.Points.Add(new Vector2f(o.X * scale, o.Y * scale)));
         Objects.Add(squareScaled);
@@ -100,7 +100,7 @@ public class World : Drawable
         {
             Name = "FiveScale",
             FillColor = Color.Red,
-            Type = Object2dTypes.Wall
+            Type = Object2dTypes.MapWall
         };
         square.Points.ForEach(o => squareScaled.Points.Add(new Vector2f(o.X * scale, o.Y * scale)));
         Objects.Add(squareScaled);
@@ -121,7 +121,7 @@ public class World : Drawable
         {
             Name = "TriangleScale",
             FillColor = Color.Red,
-            Type = Object2dTypes.Wall
+            Type = Object2dTypes.MapWall
         };
         square.Points.ForEach(o => squareScaled.Points.Add(new Vector2f(o.X * scale, o.Y * scale)));
         Objects.Add(squareScaled);
@@ -140,7 +140,7 @@ public class World : Drawable
         {
             Name = "CircleScale",
             FillColor = Color.Red,
-            Type = Object2dTypes.Wall
+            Type = Object2dTypes.MapWall
         };
         circle2dScaled.SetCenter(new Vector2f(circle2d.Center.X * scale, circle2d.Center.Y * scale));
         Objects.Add(circle2dScaled);
@@ -158,7 +158,7 @@ public class World : Drawable
             return;
         }
         target.Draw(Person);
-        target.Draw(Person.GetMappedPerson());
+        target.Draw(Person.GetScaledForMapPerson());
        
     }
 }
@@ -167,4 +167,7 @@ public enum Object2dTypes
 {
     None = 0,
     Wall = 1,
+    MapWall = 2,
+    Sky = 3,
+    Floor = 4,
 }
