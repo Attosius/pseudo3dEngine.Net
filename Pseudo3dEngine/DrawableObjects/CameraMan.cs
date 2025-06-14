@@ -6,13 +6,14 @@ namespace Pseudo3dEngine.DrawableObjects;
 
 public class CameraMan : Drawable
 {
-    public float DistanceView = 300f;
+    public float DistanceView = 1400f;
     public static int Counter = 0;
     public static int RaysCount = 1200;
     public List<long> Ticks = new(100);
     public double Fov { get; set; } = 3.14 / 2;
 
-    public Vector2f Center { get; set; } // changed to map / person
+    public Vector2f CenterCamera { get; set; } // changed to map / person
+    public Vector2f CenterMapCamera { get; set; } // changed to map / person
     public World? World { get; set; }
 
     public void Draw(RenderTarget target, RenderStates states)
@@ -23,46 +24,43 @@ public class CameraMan : Drawable
             return;
         }
         var person = World.Person;
-        DrawViewSector(target, person, Object2dTypes.Wall);
-        DrawViewSector(target, person.GetScaledForMapPerson(), Object2dTypes.MapWall);
-        //DrawSky(target);
+        var mapPerson = person.GetScaledForMapPerson();
+        CenterCamera = person.Center;
+        CenterMapCamera = mapPerson.Center;
+        DrawSky(target);
+        //DrawViewSector(target, person, Object2dTypes.Wall);
+        DrawViewSector(target, mapPerson, Object2dTypes.MapWall);
+        ///////////////////////////////// 3d
+        DrawObjects(target, person);
 
 
-        var ang = new Circle2d(10);
-        ang.FillColor = Color.Yellow;
-        var angPosition = new Vector2f(500, 400);
-        ang.Position = angPosition;
-        target.Draw(ang);
+        //var ang = new Circle2d(10);
+        //ang.FillColor = Color.Yellow;
+        //var angPosition = new Vector2f(500, 400);
+        //ang.Position = angPosition;
+        //target.Draw(ang);
 
-        var point = Helper.GetPointAtAngleAndDistance(ang.Center, World.Person.Direction, 100);
-        var obj2d = new Object2d();
-        obj2d.FillColor = Color.White;
-        //obj2d.OutlineThickness = 1;
-        //obj2d.Position = angPosition;
-        obj2d.Points.Add(ang.Center);
-        obj2d.Points.Add(point);
-        //obj2d.Points.Add(new Vector2f(point.X + 10, point.Y + 10));
-        obj2d.Points.Add(ang.Center);
-        //obj2d.Points.Add(new Vector2f(500, 400));
-        //obj2d.Points.Add(new Vector2f(500, 500));
-        //obj2d.Points.Add(new Vector2f(500, 510));
-        //obj2d.Points.Add(new Vector2f(500, 400));
-        //target.Draw(obj2d);
+        //var point = Helper.GetPointAtAngleAndDistance(ang.CenterCamera, World.Person.Direction, 100);
+        //var obj2d = new Object2d();
+        //obj2d.FillColor = Color.White;
+        //obj2d.Points.Add(ang.CenterCamera);
+        //obj2d.Points.Add(point);
+        //obj2d.Points.Add(ang.CenterCamera);
 
-        var lineArr = new Vertex[]
-        {
-            new Vertex(ang.Center),
-            new Vertex(point),
-            //new Vertex(ang.Center)
-        };
-        target.Draw(lineArr, PrimitiveType.LineStrip);
+        //var lineArr = new Vertex[]
+        //{
+        //    new Vertex(ang.CenterCamera),
+        //    new Vertex(point),
+        //    //new Vertex(ang.CenterCamera)
+        //};
+        //target.Draw(lineArr, PrimitiveType.LineStrip);
 
 
-        var ang2 = new Circle2d(10);
-        ang2.FillColor = Color.Transparent;
-        ang2.OutlineThickness = 1;
-        ang2.Position = point - new Vector2f(ang2.Radius, ang2.Radius);
-        target.Draw(ang2);
+        //var ang2 = new Circle2d(10);
+        //ang2.FillColor = Color.Transparent;
+        //ang2.OutlineThickness = 1;
+        //ang2.Position = point - new Vector2f(ang2.Radius, ang2.Radius);
+        //target.Draw(ang2);
 
     }
 
@@ -90,7 +88,7 @@ public class CameraMan : Drawable
         var floor = new Object2d()
         {
             Name = "Floor",
-            Scale = new Vector2f(0.5f, 0.5f),
+            //Scale = new Vector2f(0.5f, 0.5f),
             Type = Object2dTypes.Floor,
             FillColor = new Color(255, 219, 128, 95),
             OutlineThickness = 0
@@ -108,20 +106,18 @@ public class CameraMan : Drawable
         {
             return;
         }
-        Center = person.Center;
-        
         var viewSector = new Object2d();
-        viewSector.Points.Add(Center);
+        viewSector.Points.Add(person.Center);
 
-        var leftViewAngle = person.Direction + Fov / 2;
+        var leftViewAngle = person.Direction + Fov / 2; // because we turn overclock as pi
         var deltaRay = Fov / RaysCount;
         var sw = Stopwatch.StartNew();
         var objectsToCheck = World.Objects.Where(o => o.Type == object2dTypes).ToList();
         for (var i = 0; i < RaysCount; i++)
         {
             var currentAngle = leftViewAngle - deltaRay * i;
-            var point = Helper.GetPointAtAngleAndDistance(Center, currentAngle, DistanceView);
-            var segmentRay = (first: Center, second: point);
+            var point = Helper.GetPointAtAngleAndDistance(person.Center, currentAngle, DistanceView);
+            var segmentRay = (first: person.Center, second: point);
             var distanceToObject = float.MaxValue;
             foreach (var wordObject in objectsToCheck)
             {
@@ -139,25 +135,7 @@ public class CameraMan : Drawable
             viewSector.Points.Add(point);
         }
 
-
-        //var objects3d = new Object2d();
-        //foreach (var object2d in objectsToCheck)
-        //{
-        //    var obj2d = new Object2d();
-        //    obj2d.FillColor = new Color(255, 175, 200, 70);
-        //    obj2d.OutlineThickness = 0;
-        //    obj2d.Points.Add(Center);
-        //    obj2d.Points.Add(viewSector.Points[i + 1]);
-        //    obj2d.Points.Add(viewSector.Points[i + 2]);
-        //    target.Draw(obj2d);
-        //    foreach (var object2dDistancePoint in object2d.DistancePoints)
-        //    {
-
-        //    }
-        //}
-        //objects3d.Points.Add(point);
-
-
+        
 
         //Ticks.Add(sw.ElapsedTicks);
         //if (Counter % 100 == 0)
@@ -173,7 +151,7 @@ public class CameraMan : Drawable
             var obj2d = new Object2d();
             obj2d.FillColor = new Color(255, 175, 200, 70);
             obj2d.OutlineThickness = 0;
-            obj2d.Points.Add(Center);
+            obj2d.Points.Add(person.Center);
             obj2d.Points.Add(viewSector.Points[i + 1]);
             obj2d.Points.Add(viewSector.Points[i + 2]);
             target.Draw(obj2d);
@@ -196,23 +174,20 @@ public class CameraMan : Drawable
             }
 
         }
+        
+    }
 
-
-
-
-        if (object2dTypes != Object2dTypes.Wall)
-        {
-            return;
-        }
-
-        var rightViewAngle = person.Direction + Fov / 2;
-        ///////////////////////////////// 3d
+    private void DrawObjects(RenderTarget target, Person person)
+    {
+        var deltaRay = Fov / RaysCount;
+        var objectsToCheck = World.Objects.Where(o => o.Type == Object2dTypes.Wall).ToList();
+        var leftViewAngle = person.Direction + Fov / 2; // because we turn overclock as pi
         objectsToCheck.ForEach(o => o.DistancePoints.Clear());
         for (var i = 0; i < RaysCount; i++)
         {
             var currentAngle = leftViewAngle - deltaRay * i;
-            var point = Helper.GetPointAtAngleAndDistance(Center, currentAngle, DistanceView);
-            var segmentRay = (first: Center, second: point);
+            var point = Helper.GetPointAtAngleAndDistance(person.Center, currentAngle, DistanceView);
+            var segmentRay = (first: person.Center, second: point);
             var distanceToObject = float.MaxValue;
             Object2d crossingObject = null;
             foreach (var wordObject in objectsToCheck)
@@ -241,11 +216,11 @@ public class CameraMan : Drawable
 
 
             var height = Resources.ScreenHeight / distanceToObject * 20;
-            var heightCpp = (1 - 1/distanceToObject) *  Resources.ScreenHeight / 2;
+            var heightCpp = (1 - 1 / distanceToObject) * Resources.ScreenHeight / 2;
             var xWeight = Resources.ScreenWidth / RaysCount;
             var xScreenLeft = i * xWeight;
             var objects3d = new Object2d();
-            objects3d.FillColor = Color.Blue;
+            objects3d.FillColor = new Color(137, 137, 137);
             objects3d.OutlineThickness = 0;
             objects3d.Points.Add(new Vector2f(xScreenLeft, (float)Resources.ScreenHeight / 2 - height / 2));
             objects3d.Points.Add(new Vector2f(xScreenLeft + xWeight, (float)Resources.ScreenHeight / 2 - height / 2));
@@ -265,8 +240,5 @@ public class CameraMan : Drawable
             //}
             target.Draw(objects3d);
         }
-
-
     }
-    
 }

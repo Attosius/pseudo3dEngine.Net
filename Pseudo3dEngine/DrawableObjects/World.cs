@@ -16,7 +16,7 @@ public class World : Drawable
         square = new Object2d
         {
             Name = "Small",
-            Scale = new Vector2f(0.5f, 0.5f),
+            //Scale = new Vector2f(0.5f, 0.5f),
             Type = Object2dTypes.Wall
         };
         square.Points.Add(new Vector2f(125, 150));
@@ -40,7 +40,7 @@ public class World : Drawable
         square = new Object2d
         {
             Name = "Rect",
-            Scale = new Vector2f(0.5f, 0.5f),
+            //Scale = new Vector2f(0.5f, 0.5f),
             Type = Object2dTypes.Wall
         };
         square.Points.Add(new Vector2f(250, 150));
@@ -63,7 +63,7 @@ public class World : Drawable
         square = new Object2d()
         {
             Name = "Third",
-            Scale = new Vector2f(0.5f, 0.5f),
+            //Scale = new Vector2f(0.5f, 0.5f),
             Type = Object2dTypes.Wall
         }; ;
         square.Points.Add(new Vector2f(450, 150));
@@ -86,7 +86,7 @@ public class World : Drawable
         square = new Object2d
         {
             Name = "Five",
-            Scale = new Vector2f(0.5f, 0.5f),
+            //Scale = new Vector2f(0.5f, 0.5f),
             Type = Object2dTypes.Wall
         };
         square.Points.Add(new Vector2f(250, 450));
@@ -109,7 +109,7 @@ public class World : Drawable
         square = new Object2d()
         {
             Name = "Triangle",
-            Scale = new Vector2f(0.5f, 0.5f),
+            //Scale = new Vector2f(0.5f, 0.5f),
             Type = Object2dTypes.Wall
         };
         square.Points.Add(new Vector2f(350, 650));
@@ -129,7 +129,7 @@ public class World : Drawable
         var circle2d = new Circle2d(50)
         {
             Name = "Circle",
-            Scale = new Vector2f(0.5f, 0.5f),
+            //Scale = new Vector2f(0.5f, 0.5f),
             Type = Object2dTypes.Wall
         };
         circle2d.SetCenter(new Vector2f(150, 300));
@@ -148,7 +148,14 @@ public class World : Drawable
 
     public void Draw(RenderTarget target, RenderStates states)
     {
-        foreach (var object2d in Objects)
+        var drawableObjects = new HashSet<Object2dTypes>
+        {
+            Object2dTypes.Floor,
+            Object2dTypes.MapWall,
+            Object2dTypes.Sky
+        };
+
+        foreach (var object2d in Objects.Where(o => drawableObjects.Contains(o.Type)))
         {
             target.Draw(object2d);
         }
@@ -157,7 +164,7 @@ public class World : Drawable
         {
             return;
         }
-        target.Draw(Person);
+        //target.Draw(Person);
         target.Draw(Person.GetScaledForMapPerson());
        
     }

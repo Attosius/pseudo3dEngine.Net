@@ -11,9 +11,9 @@ public class Person : Object2d
     //public double Fov { get; set; } = 3.14 / 3;
     public float Radius { get; set; } = 10;
     public Vector2f Center => new Vector2f(PersonPosition.X + Radius, PersonPosition.Y + Radius);
-    public float Direction { get; set; } = 1f; // 1f * (float)Math.PI / 180;
-    public float Speed = 240f;
-    public float SpeedTurn = 3f;
+    public float Direction { get; set; } = -3f; // 1f * (float)Math.PI / 180;
+    public float Speed = 200f;
+    public float SpeedTurn = 2f;
 
     public float SpeedStrafe = 200f;
     //public float DistanceView = 200f;
@@ -53,37 +53,37 @@ public class Person : Object2d
     {
         DrawPerson(target);
 
-        //Center = new Vector2f(PersonPosition.X + Radius, PersonPosition.Y + Radius);
+        //CenterCamera = new Vector2f(PersonPosition.X + Radius, PersonPosition.Y + Radius);
 
         //var viewSector = new Object2d();
-        //viewSector.Points.Add(Center);
+        //viewSector.Points.Add(CenterCamera);
 
         //var leftViewAngle = Direction - Fov / 2;
-        //var leftPoint = Helper.GetPointAtAngleAndDistance(Center, leftViewAngle, DistanceView);
+        //var leftPoint = Helper.GetPointAtAngleAndDistance(CenterCamera, leftViewAngle, DistanceView);
         //viewSector.Points.Add(leftPoint);
 
         //var delta = Fov / 10;
         //var currentAngle = leftViewAngle;
         //for (int i = 0; i < 10; i++)
         //{
-        //    var point = Helper.GetPointAtAngleAndDistance(Center, currentAngle, DistanceView);
+        //    var point = Helper.GetPointAtAngleAndDistance(CenterCamera, currentAngle, DistanceView);
         //    currentAngle += delta;
         //    viewSector.Points.Add(point);
         //}
 
         //var rightViewAngle = Direction + Fov / 2;
-        //var rightPoint = Helper.GetPointAtAngleAndDistance(Center, rightViewAngle, DistanceView);
+        //var rightPoint = Helper.GetPointAtAngleAndDistance(CenterCamera, rightViewAngle, DistanceView);
         //viewSector.Points.Add(rightPoint);
         //target.Draw(viewSector);
 
-        //DrawDirection(target, states, Center);
+        //DrawDirection(target, states, CenterCamera);
 
         //
         //var deltaRay = Fov / 100;
         //for (int i = 0; i < 100; i++)
         //{
         //    currentAngle = leftViewAngle + deltaRay * i;
-        //    var point = Helper.GetPointAtAngleAndDistance(Center, currentAngle, DistanceView);
+        //    var point = Helper.GetPointAtAngleAndDistance(CenterCamera, currentAngle, DistanceView);
         //    // center, point
         //}
     }

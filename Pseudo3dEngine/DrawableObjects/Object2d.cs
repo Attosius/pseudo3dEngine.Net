@@ -15,7 +15,7 @@ public class Object2d : Drawable
     public Color FillColor = new Color(255, 175, 174, 0);
     public Color OutlineColor = new Color(255, 255, 255);
     public float OutlineThickness = 2;
-    public Vector2f Scale = new Vector2f(1, 1);
+    //public Vector2f Scale = new Vector2f(1, 1);
 
     public List<(double angle, float distance)> DistancePoints = new();
 
