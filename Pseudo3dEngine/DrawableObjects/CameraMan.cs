@@ -117,8 +117,10 @@ public class CameraMan : Drawable
         {
             var currentAngle = leftViewAngle - deltaRay * i;
             var point = Helper.GetPointAtAngleAndDistance(person.Center, currentAngle, DistanceView);
+            var pointToShowOnMap = Helper.GetPointAtAngleAndDistance(person.Center, currentAngle, 50);
             var segmentRay = (first: person.Center, second: point);
             var distanceToObject = float.MaxValue;
+            var isCrossing = false;
             foreach (var wordObject in objectsToCheck)
             {
                 if (wordObject.IsRayCrossingObject(segmentRay, out var crossPoint))
@@ -129,10 +131,11 @@ public class CameraMan : Drawable
                         distanceToObject = currentDistance;
                         point = crossPoint;
                     }
+                    isCrossing = true;;
                 }
             }
 
-            viewSector.Points.Add(point);
+            viewSector.Points.Add(isCrossing ? point : pointToShowOnMap);
         }
 
         
