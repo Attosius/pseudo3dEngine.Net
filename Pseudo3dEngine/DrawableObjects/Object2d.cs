@@ -17,6 +17,7 @@ public class Object2d : Drawable
     public float OutlineThickness = 2;
     public Vector2f Scale = new Vector2f(1, 1);
 
+    public List<(double angle, float distance)> DistancePoints = new();
 
     public Object2d()
     {

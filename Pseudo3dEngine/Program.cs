@@ -215,7 +215,8 @@ namespace Pseudo3dEngine
             //Console.WriteLine(fps);
             var position = Mouse.GetPosition(window);
             var text = new Text($"PersonPosition: X ({person.Center.X:000.0}) Y ({person.Center.Y:000.0})," +
-                                $" angle: {person.DirectionDegree:000.00}, FPS: {fps:00.00}, Mouse: ({position.X},{position.Y})", Resources.FontCourerNew, 12);
+                                $" angle degree: {person.DirectionDegree:000.00}" +
+                                $" angle rad: {person.Direction:00.00}, FPS: {fps:00.00}, Mouse: ({position.X},{position.Y})", Resources.FontCourerNew, 12);
             text.Position = new Vector2f(300, 0);
             text.FillColor = Color.White;
             //text.OutlineThickness = 0.1f;
