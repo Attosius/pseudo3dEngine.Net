@@ -7,13 +7,12 @@ namespace Pseudo3dEngine.DrawableObjects;
 public class Person : Object2d
 {
 
-    public Vector2f PersonPosition { get; set; } = new Vector2f(600, 400);
-    //public double Fov { get; set; } = 3.14 / 3;
+    public Vector2f PersonPosition { get; set; } = new Vector2f(600, 550);
     public float Radius { get; set; } = 10;
     public Vector2f Center => new Vector2f(PersonPosition.X + Radius, PersonPosition.Y + Radius);
-    public float Direction { get; set; } = -3f; // 1f * (float)Math.PI / 180;
-    public float Speed = 200f;
-    public float SpeedTurn = 2f;
+    public float Direction { get; set; } = -(float)Math.PI; // 1f * (float)Math.PI / 180;
+    public float Speed = 100f;
+    public float SpeedTurn = 1f;
 
     public float SpeedStrafe = 200f;
     //public float DistanceView = 200f;

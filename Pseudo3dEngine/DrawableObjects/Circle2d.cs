@@ -44,13 +44,13 @@ public class Circle2d : Object2d
         if (t1 is >= 0 and <= 1)
         {
             crossPoint = start + direction.ScalarMult(t1);
-            distance = segmentRay.first.ManhattanDistance(crossPoint);
+            distance = segmentRay.first.DecartDistance(crossPoint);
             isCross = true;
         }
         if (t2 is >= 0 and <= 1)
         {
             var cross2 = start + direction.ScalarMult(t2);
-            if (segmentRay.first.ManhattanDistance(cross2) < distance)
+            if (segmentRay.first.DecartDistance(cross2) < distance)
             {
                 crossPoint = cross2;
             }

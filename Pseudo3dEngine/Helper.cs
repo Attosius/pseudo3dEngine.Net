@@ -15,9 +15,19 @@ namespace Pseudo3dEngine
         {
             return new Vector2f(a.X * (float)num, a.Y * (float)num);
         }
-        public static float  ManhattanDistance(this Vector2f a, Vector2f b)
+        public static float ManhattanDistance(this Vector2f a, Vector2f b)
         {
             return Math.Abs(b.X - a.X) + Math.Abs(b.Y - a.Y);
+        }
+        //public static float ManhattanDistance(this Vector2f a, Vector2f b)
+        //{
+        //    return Math.Abs(b.X - a.X) + Math.Abs(b.Y - a.Y);
+        //}
+
+        //public static float DecartDistance(this Vector2f a, Vector2f b)
+        public static float DecartDistance(this Vector2f a, Vector2f b)
+        {
+            return MathF.Sqrt((b.X - a.X) * (b.X - a.X) + (b.Y - a.Y) * (b.Y - a.Y));
         }
     }
 }

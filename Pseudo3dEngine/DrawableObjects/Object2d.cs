@@ -43,7 +43,7 @@ public class Object2d : Drawable
             {
                 isCross = true;
                 //var currentDistance = Math.Abs(currentCrossPoint.X - segmentRay.first.X) + Math.Abs(currentCrossPoint.Y - segmentRay.first.Y);
-                var currentDistance = segmentRay.first.ManhattanDistance(currentCrossPoint);
+                var currentDistance = segmentRay.first.DecartDistance(currentCrossPoint);
                 if (currentDistance < distance)
                 {
                     distance = currentDistance;
@@ -74,7 +74,6 @@ public class Object2d : Drawable
         convexShape.OutlineThickness = OutlineThickness;
         convexShape.OutlineColor = OutlineColor;
         convexShape.Position = Position;
-
         if (Type == Object2dTypes.Wall)
         {
             var text = new Text($"{Name}", Resources.FontCourerNew, 12);

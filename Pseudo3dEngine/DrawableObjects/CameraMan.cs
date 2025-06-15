@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using SFML.Graphics;
 using SFML.System;
 
@@ -10,7 +11,7 @@ public class CameraMan : Drawable
     public static int Counter = 0;
     public static int RaysCount = 1200;
     public List<long> Ticks = new(100);
-    public double Fov { get; set; } = 3.14 / 2;
+    public double Fov { get; set; } = Math.PI / 3;
 
     public Vector2f CenterCamera { get; set; } // changed to map / person
     public Vector2f CenterMapCamera { get; set; } // changed to map / person
@@ -27,11 +28,12 @@ public class CameraMan : Drawable
         var mapPerson = person.GetScaledForMapPerson();
         CenterCamera = person.Center;
         CenterMapCamera = mapPerson.Center;
-        DrawSky(target);
-        //DrawViewSector(target, person, Object2dTypes.Wall);
-        DrawViewSector(target, mapPerson, Object2dTypes.MapWall);
+        //DrawSky(target);
         ///////////////////////////////// 3d
         DrawObjects(target, person);
+
+        //DrawViewSector(target, person, Object2dTypes.Wall);
+        DrawViewSector(target, mapPerson, Object2dTypes.MapWall);
 
 
         //var ang = new Circle2d(10);
@@ -125,7 +127,7 @@ public class CameraMan : Drawable
             {
                 if (wordObject.IsRayCrossingObject(segmentRay, out var crossPoint))
                 {
-                    var currentDistance = segmentRay.first.ManhattanDistance(crossPoint);
+                    var currentDistance = segmentRay.first.DecartDistance(crossPoint);
                     if (currentDistance < distanceToObject)
                     {
                         distanceToObject = currentDistance;
@@ -189,6 +191,8 @@ public class CameraMan : Drawable
         for (var i = 0; i < RaysCount; i++)
         {
             var currentAngle = leftViewAngle - deltaRay * i;
+            //while (currentAngle > Math.PI) currentAngle -= 2 * Math.PI;
+            //while (currentAngle < -Math.PI) currentAngle += 2 * Math.PI;
             var point = Helper.GetPointAtAngleAndDistance(person.Center, currentAngle, DistanceView);
             var segmentRay = (first: person.Center, second: point);
             var distanceToObject = float.MaxValue;
@@ -197,7 +201,7 @@ public class CameraMan : Drawable
             {
                 if (wordObject.IsRayCrossingObject(segmentRay, out var crossPoint))
                 {
-                    var currentDistance = segmentRay.first.ManhattanDistance(crossPoint);
+                    var currentDistance = segmentRay.first.DecartDistance(crossPoint);
                     if (currentDistance < distanceToObject)
                     {
                         distanceToObject = currentDistance;
@@ -216,10 +220,21 @@ public class CameraMan : Drawable
             {
                 continue;
             }
+            // кажущийся_размер_в_пикселях = (высота_объекта * высота_экрана) / (2 * расстояние * tan(fov_vertical / 2))
+            var originalWallHeight = 40;
+            var fov_vertical_radians =
+                2 * Math.Atan(Math.Tan(Fov / 2) * Resources.ScreenHeight / Resources.ScreenWidth);
+            var ang = currentAngle * 180 / Math.PI;
+            var pers = person.Direction * 180 / Math.PI;
+            var coss = ((float)currentAngle - person.Direction) * 180 / Math.PI;
 
+            float distanceCorrected = distanceToObject * MathF.Cos(MathF.Abs((float)currentAngle - person.Direction)); // Учет угла
 
-            var height = Resources.ScreenHeight / distanceToObject * 20;
-            var heightCpp = (1 - 1 / distanceToObject) * Resources.ScreenHeight / 2;
+            var height2 = Resources.ScreenHeight / distanceCorrected * originalWallHeight;
+            var height = Resources.ScreenHeight / distanceToObject * originalWallHeight;
+            //var height = (float)((originalWallHeight * Resources.ScreenHeight) /
+            //                             (distanceCorrected * Math.Tan(fov_vertical_radians / 2)));
+            //var heightCpp = (1 - 1 / distanceToObject) * Resources.ScreenHeight / 2;
             var xWeight = Resources.ScreenWidth / RaysCount;
             var xScreenLeft = i * xWeight;
             var objects3d = new Object2d();
