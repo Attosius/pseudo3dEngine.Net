@@ -15,7 +15,7 @@ public class World : Drawable
         Object2d square;
         square = new Object2d
         {
-            Name = "Small",
+            Name = "RectLeft",
             //Scale = new Vector2f(0.5f, 0.5f),
             Type = Object2dTypes.Wall
         };
@@ -24,107 +24,104 @@ public class World : Drawable
         square.Points.Add(new Vector2f(200, 200));
         square.Points.Add(new Vector2f(125, 200));
         Objects.Add(square);
-
-        var squareScaled = new Object2d
-        {
-            Name = "SmallScale",
-            FillColor = Color.Red,
-            //Position = positionMapShift,
-            Type = Object2dTypes.MapWall
-        };
-        square.Points.ForEach(o => squareScaled.Points.Add(new Vector2f(o.X * scale, o.Y * scale)));
-        Objects.Add(squareScaled);
+        AddSquareScaled(square, scale);
         ///////////////////
-        
 
         square = new Object2d
         {
-            Name = "Rect",
+            Name = "RectRight",
             //Scale = new Vector2f(0.5f, 0.5f),
             Type = Object2dTypes.Wall
         };
-        square.Points.Add(new Vector2f(250, 150));
-        square.Points.Add(new Vector2f(350, 150));
-        square.Points.Add(new Vector2f(350, 175));
-        square.Points.Add(new Vector2f(250, 175));
+        square.Points.Add(new Vector2f(1025, 150));
+        square.Points.Add(new Vector2f(1100, 150));
+        square.Points.Add(new Vector2f(1100, 200));
+        square.Points.Add(new Vector2f(1025, 200));
         Objects.Add(square);
+        AddSquareScaled(square, scale);
+        ///////////////////
 
-        squareScaled = new Object2d
+        square = new Object2d
         {
-            Name = "RectScale",
-            FillColor = Color.Red,
-            //Position = positionMapShift,
-            Type = Object2dTypes.MapWall
+            Name = "RectRight",
+            //Scale = new Vector2f(0.5f, 0.5f),
+            Type = Object2dTypes.Wall
         };
-        square.Points.ForEach(o => squareScaled.Points.Add(new Vector2f(o.X * scale, o.Y * scale)));
-        Objects.Add(squareScaled);
+        square.Points.Add(new Vector2f(200, 150));
+        square.Points.Add(new Vector2f(1025, 150));
+        square.Points.Add(new Vector2f(1025, 175));
+        square.Points.Add(new Vector2f(200, 175));
+        Objects.Add(square);
+        AddSquareScaled(square, scale);
 
         /////////////////////////
-        square = new Object2d()
-        {
-            Name = "Third",
-            //Scale = new Vector2f(0.5f, 0.5f),
-            Type = Object2dTypes.Wall
-        }; ;
-        square.Points.Add(new Vector2f(450, 150));
-        square.Points.Add(new Vector2f(650, 250));
-        square.Points.Add(new Vector2f(650, 275));
-        square.Points.Add(new Vector2f(450, 275));
-        Objects.Add(square);
-
-        squareScaled = new Object2d
-        {
-            Name = "ThirdScale",
-            FillColor = Color.Red,
-            Type = Object2dTypes.MapWall
-        };
-        square.Points.ForEach(o => squareScaled.Points.Add(new Vector2f(o.X * scale, o.Y * scale)));
-        Objects.Add(squareScaled);
+        //square = new Object2d()
+        //{
+        //    Name = "Third",
+        //    //Scale = new Vector2f(0.5f, 0.5f),
+        //    Type = Object2dTypes.Wall
+        //}; ;
+        //square.Points.Add(new Vector2f(450, 150));
+        //square.Points.Add(new Vector2f(650, 250));
+        //square.Points.Add(new Vector2f(650, 275));
+        //square.Points.Add(new Vector2f(450, 275));
+        //Objects.Add(square);
+        //AddSquareScaled(square, scale);
 
         /////////////////
 
         square = new Object2d
         {
-            Name = "Five",
+            Name = "RectVertLeft",
             //Scale = new Vector2f(0.5f, 0.5f),
             Type = Object2dTypes.Wall
         };
-        square.Points.Add(new Vector2f(250, 450));
-        square.Points.Add(new Vector2f(350, 550));
-        square.Points.Add(new Vector2f(350, 575));
-        square.Points.Add(new Vector2f(250, 575));
-        square.Points.Add(new Vector2f(150, 475));
+        square.Points.Add(new Vector2f(150, 200));
+        square.Points.Add(new Vector2f(175, 200));
+        square.Points.Add(new Vector2f(175, 525));
+        square.Points.Add(new Vector2f(150, 525));
         Objects.Add(square);
+        AddSquareScaled(square, scale);
 
-        squareScaled = new Object2d
+        square = new Object2d
         {
-            Name = "FiveScale",
-            FillColor = Color.Red,
-            Type = Object2dTypes.MapWall
-        };
-        square.Points.ForEach(o => squareScaled.Points.Add(new Vector2f(o.X * scale, o.Y * scale)));
-        Objects.Add(squareScaled);
-
-
-        square = new Object2d()
-        {
-            Name = "Triangle",
+            Name = "RectVerlRight",
             //Scale = new Vector2f(0.5f, 0.5f),
             Type = Object2dTypes.Wall
         };
-        square.Points.Add(new Vector2f(350, 650));
-        square.Points.Add(new Vector2f(350, 750));
-        square.Points.Add(new Vector2f(250, 775));
+        square.Points.Add(new Vector2f(1050, 200));
+        square.Points.Add(new Vector2f(1075, 200));
+        square.Points.Add(new Vector2f(1075, 525));
+        square.Points.Add(new Vector2f(1050, 525));
         Objects.Add(square);
+        AddSquareScaled(square, scale);
 
-        squareScaled = new Object2d
-        {
-            Name = "TriangleScale",
-            FillColor = Color.Red,
-            Type = Object2dTypes.MapWall
-        };
-        square.Points.ForEach(o => squareScaled.Points.Add(new Vector2f(o.X * scale, o.Y * scale)));
-        Objects.Add(squareScaled);
+        //square = new Object2d
+        //{
+        //    Name = "Five",
+        //    //Scale = new Vector2f(0.5f, 0.5f),
+        //    Type = Object2dTypes.Wall
+        //};
+        //square.Points.Add(new Vector2f(250, 450));
+        //square.Points.Add(new Vector2f(350, 550));
+        //square.Points.Add(new Vector2f(350, 575));
+        //square.Points.Add(new Vector2f(250, 575));
+        //square.Points.Add(new Vector2f(150, 475));
+        //Objects.Add(square);
+        //AddSquareScaled(square, scale);
+
+
+        //square = new Object2d()
+        //{
+        //    Name = "Triangle",
+        //    //Scale = new Vector2f(0.5f, 0.5f),
+        //    Type = Object2dTypes.Wall
+        //};
+        //square.Points.Add(new Vector2f(350, 650));
+        //square.Points.Add(new Vector2f(350, 750));
+        //square.Points.Add(new Vector2f(250, 775));
+        //Objects.Add(square);
+        //AddSquareScaled(square, scale);
 
         var circle2d = new Circle2d(50)
         {
@@ -132,27 +129,127 @@ public class World : Drawable
             //Scale = new Vector2f(0.5f, 0.5f),
             Type = Object2dTypes.Wall
         };
-        circle2d.SetCenter(new Vector2f(150, 300));
+        circle2d.SetCenter(new Vector2f(325, 300));
         Objects.Add(circle2d);
+        AddCircleScaled(circle2d, scale);
+
+        square = new Object2d
+        {
+            Name = "SquareBigRight",
+            //Scale = new Vector2f(0.5f, 0.5f),
+            Type = Object2dTypes.Wall
+        };
+        square.Points.Add(new Vector2f(850, 250));
+        square.Points.Add(new Vector2f(950, 250));
+        square.Points.Add(new Vector2f(950, 350));
+        square.Points.Add(new Vector2f(850, 350));
+        Objects.Add(square);
+        AddSquareScaled(square, scale);
+
+        square = new Object2d
+        {
+            Name = "SquareSmallL",
+            //Scale = new Vector2f(0.5f, 0.5f),
+            Type = Object2dTypes.Wall
+        };
+        square.Points.Add(new Vector2f(450, 275));
+        square.Points.Add(new Vector2f(500, 275));
+        square.Points.Add(new Vector2f(500, 325));
+        square.Points.Add(new Vector2f(450, 325));
+        Objects.Add(square);
+        AddSquareScaled(square, scale);
+
+        square = new Object2d
+        {
+            Name = "SquareSmallM",
+            //Scale = new Vector2f(0.5f, 0.5f),
+            Type = Object2dTypes.Wall
+        };
+        square.Points.Add(new Vector2f(575, 275));
+        square.Points.Add(new Vector2f(625, 275));
+        square.Points.Add(new Vector2f(625, 325));
+        square.Points.Add(new Vector2f(575, 325));
+        Objects.Add(square);
+        AddSquareScaled(square, scale);
+
+        square = new Object2d
+        {
+            Name = "SquareSmallR",
+            //Scale = new Vector2f(0.5f, 0.5f),
+            Type = Object2dTypes.Wall
+        };
+        square.Points.Add(new Vector2f(700, 275));
+        square.Points.Add(new Vector2f(750, 275));
+        square.Points.Add(new Vector2f(750, 325));
+        square.Points.Add(new Vector2f(700, 325));
+        Objects.Add(square);
+        AddSquareScaled(square, scale);
+
+        square = new Object2d
+        {
+            Name = "RectDown",
+            //Scale = new Vector2f(0.5f, 0.5f),
+            Type = Object2dTypes.Wall
+        };
+        square.Points.Add(new Vector2f(250, 400));
+        square.Points.Add(new Vector2f(450, 400));
+        square.Points.Add(new Vector2f(450, 450));
+        square.Points.Add(new Vector2f(250, 450));
+        Objects.Add(square);
+        AddSquareScaled(square, scale);
 
 
+        square = new Object2d
+        {
+            Name = "Triangle",
+            //Scale = new Vector2f(0.5f, 0.5f),
+            Type = Object2dTypes.Wall
+        };
+        square.Points.Add(new Vector2f(900, 400));
+        square.Points.Add(new Vector2f(925, 475));
+        square.Points.Add(new Vector2f(875, 475));
+        Objects.Add(square);
+        AddSquareScaled(square, scale);
+
+    }
+
+    private void AddCircleScaled(Circle2d circle2d, float scale)
+    {
         var circle2dScaled = new Circle2d(circle2d.Radius * scale)
         {
-            Name = "CircleScale",
+            Name = $"{circle2d.Name}_Scaled",
             FillColor = Color.Red,
+            OutlineThickness = 1f,
+            OutlineColor = Color.Black,
             Type = Object2dTypes.MapWall
         };
         circle2dScaled.SetCenter(new Vector2f(circle2d.Center.X * scale, circle2d.Center.Y * scale));
         Objects.Add(circle2dScaled);
     }
 
+    private void AddSquareScaled(Object2d square, float scale)
+    {
+        var squareScaled = new Object2d
+        {
+            Name = $"{square.Name}_Scaled",
+            FillColor = Color.Red,
+            //Position = positionMapShift,
+            OutlineThickness = 1f,
+            OutlineColor = Color.Black,
+            Type = Object2dTypes.MapWall
+        };
+        square.Points.ForEach(o => squareScaled.Points.Add(new Vector2f(o.X * scale, o.Y * scale)));
+        Objects.Add(squareScaled);
+    }
+
     public void Draw(RenderTarget target, RenderStates states)
     {
         var drawableObjects = new HashSet<Object2dTypes>
         {
-            Object2dTypes.Floor,
+            //Object2dTypes.Floor,
+            //Object2dTypes.Wall,
             Object2dTypes.MapWall,
-            Object2dTypes.Sky
+            //Object2dTypes.Sky
         };
 
         foreach (var object2d in Objects.Where(o => drawableObjects.Contains(o.Type)))
