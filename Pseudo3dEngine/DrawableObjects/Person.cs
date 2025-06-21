@@ -10,9 +10,10 @@ public class Person : Object2d
     public Vector2f PersonPosition { get; set; } = new Vector2f(600, 550);
     public float Radius { get; set; } = 10;
     public Vector2f Center => new Vector2f(PersonPosition.X + Radius, PersonPosition.Y + Radius);
-    public float Direction { get; set; } = -(float)Math.PI; // 1f * (float)Math.PI / 180;
+    public float DirectionRad { get; set; } = -(float)Math.PI; // 1f * (float)Math.PI / 180;
+    public float DirectionDegree => DirectionRad * 180 / (float)Math.PI;
     public float Speed = 100f;
-    public float SpeedTurn = 1f;
+    public float SpeedTurn = 0.1f;
 
     public float SpeedStrafe = 200f;
     //public float DistanceView = 200f;
@@ -31,7 +32,6 @@ public class Person : Object2d
 
     }
 
-    public float DirectionDegree => Direction * 180 / (float)Math.PI;
 
     public Person()
     {
@@ -57,7 +57,7 @@ public class Person : Object2d
         //var viewSector = new Object2d();
         //viewSector.Points.Add(CenterCamera);
 
-        //var leftViewAngle = Direction - Fov / 2;
+        //var leftViewAngle = DirectionRad - Fov / 2;
         //var leftPoint = Helper.GetPointAtAngleAndDistance(CenterCamera, leftViewAngle, DistanceView);
         //viewSector.Points.Add(leftPoint);
 
@@ -70,7 +70,7 @@ public class Person : Object2d
         //    viewSector.Points.Add(point);
         //}
 
-        //var rightViewAngle = Direction + Fov / 2;
+        //var rightViewAngle = DirectionRad + Fov / 2;
         //var rightPoint = Helper.GetPointAtAngleAndDistance(CenterCamera, rightViewAngle, DistanceView);
         //viewSector.Points.Add(rightPoint);
         //target.Draw(viewSector);

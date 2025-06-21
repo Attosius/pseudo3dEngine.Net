@@ -78,8 +78,8 @@ public class World : Drawable
         };
         square.Points.Add(new Vector2f(150, 200));
         square.Points.Add(new Vector2f(175, 200));
-        square.Points.Add(new Vector2f(175, 525));
-        square.Points.Add(new Vector2f(150, 525));
+        square.Points.Add(new Vector2f(175, 925));
+        square.Points.Add(new Vector2f(150, 925));
         Objects.Add(square);
         AddSquareScaled(square, scale);
 
@@ -91,8 +91,8 @@ public class World : Drawable
         };
         square.Points.Add(new Vector2f(1050, 200));
         square.Points.Add(new Vector2f(1075, 200));
-        square.Points.Add(new Vector2f(1075, 525));
-        square.Points.Add(new Vector2f(1050, 525));
+        square.Points.Add(new Vector2f(1075, 925));
+        square.Points.Add(new Vector2f(1050, 925));
         Objects.Add(square);
         AddSquareScaled(square, scale);
 
