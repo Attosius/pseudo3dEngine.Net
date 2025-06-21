@@ -153,8 +153,9 @@ namespace Pseudo3dEngine
             {
                 return;
             }
-
             var person = cameraMan.World.Person;
+            person.IsForceSpeed = Keyboard.IsKeyPressed(Keyboard.Key.LShift);
+
             if (Keyboard.IsKeyPressed(Keyboard.Key.W))
             {
                 var personPosition = person.PersonPosition;
@@ -199,20 +200,24 @@ namespace Pseudo3dEngine
                 personPosition.X += person.SpeedStrafe * elapsedTime;
                 person.PersonPosition = personPosition;
             }
-
+            
             if (Keyboard.IsKeyPressed(Keyboard.Key.A))
             {
                 // нормаль от дирекшин и также взять син и кос
                 var personPosition = person.PersonPosition;
-                personPosition.X -= (float)Math.Sin(person.DirectionRad) * person.Speed * elapsedTime;
-                personPosition.Y -= (float)Math.Cos(person.DirectionRad) * person.Speed * elapsedTime;
-
-                //person.DirectionRad += person.SpeedTurn * elapsedTime;
+                var normDirection = person.DirectionRad - Math.PI / 2;
+                personPosition.X -= (float)Math.Sin(normDirection) * person.Speed * elapsedTime;
+                personPosition.Y -= (float)Math.Cos(normDirection) * person.Speed * elapsedTime;
+                person.PersonPosition = personPosition;
             }
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.D))
             {
-                //person.DirectionRad -= person.SpeedTurn * elapsedTime;
+                var personPosition = person.PersonPosition;
+                var normDirection = person.DirectionRad + Math.PI / 2;
+                personPosition.X -= (float)Math.Sin(normDirection) * person.Speed * elapsedTime;
+                personPosition.Y -= (float)Math.Cos(normDirection) * person.Speed * elapsedTime;
+                person.PersonPosition = personPosition;
             }
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.M))

@@ -12,10 +12,13 @@ public class Person : Object2d
     public Vector2f Center => new Vector2f(PersonPosition.X + Radius, PersonPosition.Y + Radius);
     public float DirectionRad { get; set; } = -(float)Math.PI; // 1f * (float)Math.PI / 180;
     public float DirectionDegree => DirectionRad * 180 / (float)Math.PI;
-    public float Speed = 100f;
-    public float SpeedTurn = 0.1f;
+    public float Speed => IsForceSpeed ? ForceSpeed : UsualSpeed;
+    public float SpeedTurn = 0.4f;
 
     public float SpeedStrafe = 200f;
+    public bool IsForceSpeed = false;
+    public float ForceSpeed = 200f;
+    public float UsualSpeed = 100f;
     //public float DistanceView = 200f;
 
     public Person GetScaledForMapPerson()
@@ -25,7 +28,8 @@ public class Person : Object2d
         mappedPerson.Name = "mappedPerson";
         mappedPerson.Radius *= scale;
         mappedPerson.PersonPosition *= scale;
-        mappedPerson.Speed *= scale;
+        mappedPerson.ForceSpeed *= scale;
+        mappedPerson.UsualSpeed *= scale;
         mappedPerson.SpeedTurn *= scale;
         mappedPerson.SpeedStrafe *= scale;
         return mappedPerson;
