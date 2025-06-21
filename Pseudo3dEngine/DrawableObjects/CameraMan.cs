@@ -11,6 +11,7 @@ public class CameraMan : Drawable
     public static int Counter = 0;
     public static int RaysCount = 1200;
     public List<long> Ticks = new(100);
+    public int MouseViewPosition = 0;
     public double Fov { get; set; } = Math.PI / 3;
 
     public Vector2f CenterCamera { get; set; } // changed to map / person
@@ -42,7 +43,7 @@ public class CameraMan : Drawable
         //ang.Position = angPosition;
         //target.Draw(ang);
 
-        //var point = Helper.GetPointAtAngleAndDistance(ang.CenterCamera, World.Person.Direction, 100);
+        //var point = Helper.GetPointAtAngleAndDistance(ang.CenterCamera, World.Person.DirectionRad, 100);
         //var obj2d = new Object2d();
         //obj2d.FillColor = Color.White;
         //obj2d.Points.Add(ang.CenterCamera);
@@ -111,7 +112,7 @@ public class CameraMan : Drawable
         var viewSector = new Object2d();
         viewSector.Points.Add(person.Center);
 
-        var leftViewAngle = person.Direction + Fov / 2; // because we turn overclock as pi
+        var leftViewAngle = person.DirectionRad + Fov / 2; // because we turn overclock as pi
         var deltaRay = Fov / RaysCount;
         var sw = Stopwatch.StartNew();
         var objectsToCheck = World.Objects.Where(o => o.Type == object2dTypes).ToList();
@@ -186,7 +187,7 @@ public class CameraMan : Drawable
     {
         var deltaRay = Fov / RaysCount;
         var objectsToCheck = World.Objects.Where(o => o.Type == Object2dTypes.Wall).ToList();
-        var leftViewAngle = person.Direction + Fov / 2; // because we turn overclock as pi
+        var leftViewAngle = person.DirectionRad + Fov / 2; // because we turn overclock as pi
         objectsToCheck.ForEach(o => o.DistancePoints.Clear());
         for (var i = 0; i < RaysCount; i++)
         {
@@ -225,10 +226,10 @@ public class CameraMan : Drawable
             var fov_vertical_radians =
                 2 * Math.Atan(Math.Tan(Fov / 2) * Resources.ScreenHeight / Resources.ScreenWidth);
             var ang = currentAngle * 180 / Math.PI;
-            var pers = person.Direction * 180 / Math.PI;
-            var coss = ((float)currentAngle - person.Direction) * 180 / Math.PI;
+            var pers = person.DirectionRad * 180 / Math.PI;
+            var coss = ((float)currentAngle - person.DirectionRad) * 180 / Math.PI;
 
-            float distanceCorrected = distanceToObject * MathF.Cos(MathF.Abs((float)currentAngle - person.Direction)); // Учет угла
+            float distanceCorrected = distanceToObject * MathF.Cos(MathF.Abs((float)currentAngle - person.DirectionRad)); // Учет угла
 
             var height2 = Resources.ScreenHeight / distanceCorrected * originalWallHeight;
             var height = Resources.ScreenHeight / distanceToObject * originalWallHeight;

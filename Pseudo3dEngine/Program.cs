@@ -19,17 +19,17 @@ namespace Pseudo3dEngine
                 window.Display();
 
                 var texture = new Texture(@"d:\Projects\Pseudo3dEngine.Net\Pseudo3dEngine\cold_heart.jpeg");
-               
+
                 //var circleShape = new CircleShape(50);
                 //circleShape.FillColor = Color.Green;
-                
+
                 //var rectangle = new RectangleShape(new Vector2f(120f, 50f));
                 //rectangle.FillColor = new Color(255, 175, 174);
                 //rectangle.Size = new Vector2f(10, 10);
                 //rectangle.PersonPosition = new Vector2f(0, 0);
                 //rectangle.OutlineThickness = 2;
                 //rectangle.OutlineColor = new Color(255, 255, 255);
-                
+
                 //var line = new RectangleShape (new Vector2f(10, 133));
                 //line.Rotation = 45;
 
@@ -40,7 +40,7 @@ namespace Pseudo3dEngine
                 //    new Vertex(new Vector2f(150, 150)),
                 //    new Vertex(new Vector2f(50, 10))
                 //};
-                
+
                 var world = new World
                 {
                     Person = new Person()
@@ -48,6 +48,7 @@ namespace Pseudo3dEngine
                 var cameraMan = new CameraMan
                 {
                     World = world,
+                    MouseViewPosition = Mouse.GetPosition(window).X,
                 };
                 var mapCoordinates = new MapCoordinates(Resources.ScreenWidth, Resources.ScreenHeight);
                 //var mousePosition = new MousePosition(window);
@@ -79,12 +80,12 @@ namespace Pseudo3dEngine
                         {
                             // Может быть добавлена небольшая задержка для уменьшения нагрузки на CPU,
                             // но это снизит точность.  Thread.Yield() может быть полезен здесь.
-                             Thread.Yield();
+                            Thread.Yield();
                         }
 
                         currentTime = sw.Elapsed.TotalSeconds; // Обновляем currentTime после сна
                         elapsedTime = currentTime - lastTime;
-                    } 
+                    }
                     //Console.WriteLine($"elapsedTime after:{elapsedTime * 1000:0.000}");
                     lastTime = currentTime;
 
@@ -107,13 +108,13 @@ namespace Pseudo3dEngine
 
                     window.DispatchEvents();
                     window.Closed += (sender, _) => ((RenderWindow)sender!).Close();
-                    
-                    InputEvents(world.Person, mapCoordinates, (float)elapsedTime);
+
+                    InputEvents(window, cameraMan, mapCoordinates, (float)elapsedTime);
 
                     window.Clear();
-                    
+
                     //window.Draw(sprite);
-                    
+
                     //window.Draw(circleShape);
                     //window.Draw(rectangle);
                     //window.Draw(line);
@@ -146,21 +147,27 @@ namespace Pseudo3dEngine
             }
         }
 
-        private static void InputEvents(Person person, MapCoordinates mapCoordinates, float elapsedTime)
+        private static void InputEvents(RenderWindow window, CameraMan cameraMan, MapCoordinates mapCoordinates, float elapsedTime)
         {
+            if (cameraMan.World?.Person == null)
+            {
+                return;
+            }
+
+            var person = cameraMan.World.Person;
             if (Keyboard.IsKeyPressed(Keyboard.Key.W))
             {
                 var personPosition = person.PersonPosition;
-                personPosition.X += (float)Math.Sin(person.Direction) * person.Speed * elapsedTime;
-                personPosition.Y += (float)Math.Cos(person.Direction) * person.Speed * elapsedTime;
+                personPosition.X += (float)Math.Sin(person.DirectionRad) * person.Speed * elapsedTime;
+                personPosition.Y += (float)Math.Cos(person.DirectionRad) * person.Speed * elapsedTime;
                 person.PersonPosition = personPosition;
             }
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.S))
             {
                 var personPosition = person.PersonPosition;
-                personPosition.X -= (float)Math.Sin(person.Direction) * person.Speed * elapsedTime;
-                personPosition.Y -= (float)Math.Cos(person.Direction) * person.Speed * elapsedTime;
+                personPosition.X -= (float)Math.Sin(person.DirectionRad) * person.Speed * elapsedTime;
+                personPosition.Y -= (float)Math.Cos(person.DirectionRad) * person.Speed * elapsedTime;
                 person.PersonPosition = personPosition;
             }
 
@@ -195,17 +202,29 @@ namespace Pseudo3dEngine
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.A))
             {
-                person.Direction += person.SpeedTurn * elapsedTime;
+                // нормаль от дирекшин и также взять син и кос
+                var personPosition = person.PersonPosition;
+                personPosition.X -= (float)Math.Sin(person.DirectionRad) * person.Speed * elapsedTime;
+                personPosition.Y -= (float)Math.Cos(person.DirectionRad) * person.Speed * elapsedTime;
+
+                //person.DirectionRad += person.SpeedTurn * elapsedTime;
             }
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.D))
             {
-                person.Direction -= person.SpeedTurn * elapsedTime;
+                //person.DirectionRad -= person.SpeedTurn * elapsedTime;
             }
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.M))
             {
                 mapCoordinates.Visible = !mapCoordinates.Visible;
+            }
+            var mousePositionNewX = Mouse.GetPosition(window).X;
+            var diff = cameraMan.MouseViewPosition - mousePositionNewX;
+            if (diff != 0)
+            {
+                cameraMan.MouseViewPosition = mousePositionNewX;
+                person.DirectionRad += person.SpeedTurn * (float)elapsedTime * diff;
             }
         }
 
@@ -216,7 +235,7 @@ namespace Pseudo3dEngine
             var position = Mouse.GetPosition(window);
             var text = new Text($"PersonPosition: X ({person.Center.X:000.0}) Y ({person.Center.Y:000.0})," +
                                 $" angle degree: {person.DirectionDegree:000.00}" +
-                                $" angle rad: {person.Direction:00.00}, FPS: {fps:00.00}, Mouse: ({position.X},{position.Y})", Resources.FontCourerNew, 12);
+                                $" angle rad: {person.DirectionRad:00.00}, FPS: {fps:00.00}, Mouse: ({position.X},{position.Y})", Resources.FontCourerNew, 12);
             text.Position = new Vector2f(300, 0);
             text.FillColor = Color.White;
             //text.OutlineThickness = 0.1f;
