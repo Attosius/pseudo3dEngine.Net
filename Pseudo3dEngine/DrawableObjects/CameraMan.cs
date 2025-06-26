@@ -197,7 +197,7 @@ public class CameraMan : Drawable
             var point = Helper.GetPointAtAngleAndDistance(person.Center, currentAngle, DistanceView);
             var segmentRay = (first: person.Center, second: point);
             var distanceToObject = float.MaxValue;
-            Object2d crossingObject = null;
+            Object2d? crossingObject = null;
             foreach (var wordObject in objectsToCheck)
             {
                 if (wordObject.IsRayCrossingObject(segmentRay, out var crossPoint))
@@ -223,23 +223,27 @@ public class CameraMan : Drawable
             }
             // кажущийся_размер_в_пикселях = (высота_объекта * высота_экрана) / (2 * расстояние * tan(fov_vertical / 2))
             var originalWallHeight = 40;
-            var fov_vertical_radians =
-                2 * Math.Atan(Math.Tan(Fov / 2) * Resources.ScreenHeight / Resources.ScreenWidth);
-            var ang = currentAngle * 180 / Math.PI;
-            var pers = person.DirectionRad * 180 / Math.PI;
-            var coss = ((float)currentAngle - person.DirectionRad) * 180 / Math.PI;
+            //var fov_vertical_radians = 2 * Math.Atan(Math.Tan(Fov / 2) * Resources.ScreenHeight / Resources.ScreenWidth);
+            //var ang = currentAngle * 180 / Math.PI;
+            //var pers = person.DirectionRad * 180 / Math.PI;
+            //var coss = ((float)currentAngle - person.DirectionRad) * 180 / Math.PI;
 
             float distanceCorrected = distanceToObject * MathF.Cos(MathF.Abs((float)currentAngle - person.DirectionRad)); // Учет угла
 
-            var height2 = Resources.ScreenHeight / distanceCorrected * originalWallHeight;
-            var height = Resources.ScreenHeight / distanceToObject * originalWallHeight;
+            var height = Resources.ScreenHeight / distanceCorrected * originalWallHeight;
+            //var height2 = Resources.ScreenHeight / distanceToObject * originalWallHeight;
+
             //var height = (float)((originalWallHeight * Resources.ScreenHeight) /
             //                             (distanceCorrected * Math.Tan(fov_vertical_radians / 2)));
             //var heightCpp = (1 - 1 / distanceToObject) * Resources.ScreenHeight / 2;
+
+
             var xWeight = Resources.ScreenWidth / RaysCount;
             var xScreenLeft = i * xWeight;
             var objects3d = new Object2d();
-            objects3d.FillColor = new Color(137, 137, 137);
+            var colorRate = (byte)Math.Abs(170 - (distanceToObject / 5)); // 170-gray, 5 - speed of shadow
+            //colorRate = 137;
+            objects3d.FillColor = new Color(colorRate, colorRate, colorRate);
             objects3d.OutlineThickness = 0;
             objects3d.Points.Add(new Vector2f(xScreenLeft, (float)Resources.ScreenHeight / 2 - height / 2));
             objects3d.Points.Add(new Vector2f(xScreenLeft + xWeight, (float)Resources.ScreenHeight / 2 - height / 2));
