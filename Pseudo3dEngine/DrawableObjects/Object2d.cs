@@ -16,6 +16,8 @@ public class Object2d : Drawable
     public Color OutlineColor = new Color(255, 255, 255);
     public float OutlineThickness = 2;
     //public Vector2f Scale = new Vector2f(1, 1);
+    public List<Tuple<int, Vector2f>> RayCounterList = new ();
+    public int RayCounter = 0;
 
     public List<(double angle, float distance)> DistancePoints = new();
 

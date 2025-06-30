@@ -83,7 +83,7 @@ public class CameraMan : Drawable
         //sky.Points.Add(new Vector2f(Resources.ScreenWidth, Resources.SkyHeight));
         //sky.Points.Add(new Vector2f(0, Resources.SkyHeight));
         //target.Draw(sky);
-        Resources.TextureSky.Repeated = true;
+        //Resources.TextureSky.Repeated = true;
         var sprite = new Sprite(Resources.TextureSky, new IntRect(0, 0, (int)Resources.ScreenWidth, (int)Resources.SkyHeight));
         sprite.Color = new Color(255, 255, 255, 195);
         target.Draw(sprite);
@@ -189,6 +189,8 @@ public class CameraMan : Drawable
         var objectsToCheck = World.Objects.Where(o => o.Type == Object2dTypes.Wall).ToList();
         var leftViewAngle = person.DirectionRad + Fov / 2; // because we turn overclock as pi
         objectsToCheck.ForEach(o => o.DistancePoints.Clear());
+        objectsToCheck.ForEach(o => o.RayCounterList.Clear());
+        objectsToCheck.ForEach(o => o.RayCounter = 0);
         for (var i = 0; i < RaysCount; i++)
         {
             var currentAngle = leftViewAngle - deltaRay * i;
@@ -221,6 +223,7 @@ public class CameraMan : Drawable
             {
                 continue;
             }
+            crossingObject.RayCounterList.Add(new Tuple<int, Vector2f>(crossingObject.RayCounter++, point));
             // кажущийся_размер_в_пикселях = (высота_объекта * высота_экрана) / (2 * расстояние * tan(fov_vertical / 2))
             var originalWallHeight = 40;
             //var fov_vertical_radians = 2 * Math.Atan(Math.Tan(Fov / 2) * Resources.ScreenHeight / Resources.ScreenWidth);
@@ -238,17 +241,29 @@ public class CameraMan : Drawable
             //var heightCpp = (1 - 1 / distanceToObject) * Resources.ScreenHeight / 2;
 
 
-            var xWeight = Resources.ScreenWidth / RaysCount;
-            var xScreenLeft = i * xWeight;
+            var xWidth = Resources.ScreenWidth / RaysCount;
+            var xScreenLeft = i * xWidth;
             var objects3d = new Object2d();
             var colorRate2 = (byte)Math.Abs(170 - (distanceToObject / 5)); // 170-gray, 5 - speed of shadow
             var colorRate = (byte)137;
             objects3d.FillColor = new Color(colorRate, colorRate, colorRate);
             objects3d.OutlineThickness = 0;
-            objects3d.Points.Add(new Vector2f(xScreenLeft, (float)Resources.ScreenHeight / 2 - height / 2));
-            objects3d.Points.Add(new Vector2f(xScreenLeft + xWeight, (float)Resources.ScreenHeight / 2 - height / 2));
-            objects3d.Points.Add(new Vector2f(xScreenLeft + xWeight, (float)Resources.ScreenHeight / 2 + height / 2));
-            objects3d.Points.Add(new Vector2f(xScreenLeft, (float)Resources.ScreenHeight / 2 + height / 2));
+            var xScreenRight = (float)Resources.ScreenHeight / 2;
+            //objects3d.Position = new Vector2f(xScreenLeft, xScreenRight);
+            objects3d.Points.Add(new Vector2f(xScreenLeft, xScreenRight - height ));
+            objects3d.Points.Add(new Vector2f(xScreenLeft + xWidth, xScreenRight - height ));
+            objects3d.Points.Add(new Vector2f(xScreenLeft + xWidth, xScreenRight + height ));
+            objects3d.Points.Add(new Vector2f(xScreenLeft, xScreenRight + height ));
+
+            var sprite = new Sprite(Resources.TextureBrick, new IntRect((int)xScreenLeft, 0, (int)xWidth, (int)height*2));
+            sprite.Position = new Vector2f(xScreenLeft, xScreenRight - height );
+
+            //sprite.Color = new Color(255, 255, 255, 195);
+            target.Draw(sprite);
+
+            //target.Draw(objects3d);
+
+
             //if (i % 10 == 0)
             //{
             //    var text = new Text($"{new Vector2f(xScreenLeft, (float)Resources.ScreenHeight / 2 - height / 2)}", Resources.FontCourerNew, 12);
@@ -261,7 +276,6 @@ public class CameraMan : Drawable
             //    text2.FillColor = Color.White;
             //    target.Draw(text2);
             //}
-            target.Draw(objects3d);
         }
     }
 }
