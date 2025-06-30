@@ -13,6 +13,7 @@ namespace Pseudo3dEngine
 
         private static Font? _fontCourerNew;
         private static Texture? _textureSky;
+        private static Texture? _textureBrick;
 
         public static Font FontCourerNew
         {
@@ -20,7 +21,7 @@ namespace Pseudo3dEngine
             {
                 if (_fontCourerNew == null)
                 {
-                    _fontCourerNew = new Font(Path.Combine(Directory.GetCurrentDirectory(), "cour.ttf"));
+                    _fontCourerNew = new Font(Path.Combine(Directory.GetCurrentDirectory(), "Resources/cour.ttf"));
                 }
                 return _fontCourerNew;
             }
@@ -31,9 +32,20 @@ namespace Pseudo3dEngine
             {
                 if (_textureSky == null)
                 {
-                    _textureSky = new Texture(Path.Combine(@"d:\Projects\Pseudo3dEngine.Net\Pseudo3dEngine\", "sky.jpg"));
+                    _textureSky = new Texture(Path.Combine(Directory.GetCurrentDirectory(), "Resources/sky.jpg"));
                 }
                 return _textureSky;
+            }
+        }
+        public static Texture TextureBrick
+        {
+            get
+            {
+                if (_textureBrick == null)
+                {
+                    _textureBrick = new Texture(Path.Combine(Directory.GetCurrentDirectory(), "Resources/1nf_flash_akkord_coral.jpg"));
+                }
+                return _textureBrick;
             }
         }
     }

@@ -12,7 +12,7 @@ public class CameraMan : Drawable
     public static int RaysCount = 1200;
     public List<long> Ticks = new(100);
     public int MouseViewPosition = 0;
-    public double Fov { get; set; } = Math.PI / 3;
+    public double Fov { get; set; } = Math.PI / 6;
 
     public Vector2f CenterCamera { get; set; } // changed to map / person
     public Vector2f CenterMapCamera { get; set; } // changed to map / person
@@ -29,7 +29,7 @@ public class CameraMan : Drawable
         var mapPerson = person.GetScaledForMapPerson();
         CenterCamera = person.Center;
         CenterMapCamera = mapPerson.Center;
-        //DrawSky(target);
+        DrawSky(target);
         ///////////////////////////////// 3d
         DrawObjects(target, person);
 
@@ -83,7 +83,7 @@ public class CameraMan : Drawable
         //sky.Points.Add(new Vector2f(Resources.ScreenWidth, Resources.SkyHeight));
         //sky.Points.Add(new Vector2f(0, Resources.SkyHeight));
         //target.Draw(sky);
-
+        Resources.TextureSky.Repeated = true;
         var sprite = new Sprite(Resources.TextureSky, new IntRect(0, 0, (int)Resources.ScreenWidth, (int)Resources.SkyHeight));
         sprite.Color = new Color(255, 255, 255, 195);
         target.Draw(sprite);
@@ -241,8 +241,8 @@ public class CameraMan : Drawable
             var xWeight = Resources.ScreenWidth / RaysCount;
             var xScreenLeft = i * xWeight;
             var objects3d = new Object2d();
-            var colorRate = (byte)Math.Abs(170 - (distanceToObject / 5)); // 170-gray, 5 - speed of shadow
-            //colorRate = 137;
+            var colorRate2 = (byte)Math.Abs(170 - (distanceToObject / 5)); // 170-gray, 5 - speed of shadow
+            var colorRate = (byte)137;
             objects3d.FillColor = new Color(colorRate, colorRate, colorRate);
             objects3d.OutlineThickness = 0;
             objects3d.Points.Add(new Vector2f(xScreenLeft, (float)Resources.ScreenHeight / 2 - height / 2));
