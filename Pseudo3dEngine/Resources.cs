@@ -43,7 +43,7 @@ namespace Pseudo3dEngine
             {
                 if (_textureBrick == null)
                 {
-                    _textureBrick = new Texture(Path.Combine(Directory.GetCurrentDirectory(), "Resources/1nf_flash_akkord_coral.jpg"));
+                    _textureBrick = new Texture(Path.Combine(Directory.GetCurrentDirectory(), "Resources/brickSmall.png"));
                 }
                 return _textureBrick;
             }

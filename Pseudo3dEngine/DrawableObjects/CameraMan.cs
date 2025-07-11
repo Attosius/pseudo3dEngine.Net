@@ -9,7 +9,7 @@ public class CameraMan : Drawable
 {
     public float DistanceView = 1400f;
     public static int Counter = 0;
-    public static int RaysCount = 1200;
+    public static int RaysCount = 50;
     public List<long> Ticks = new(100);
     public int MouseViewPosition = 0;
     public double Fov { get; set; } = Math.PI / 6;
@@ -126,7 +126,7 @@ public class CameraMan : Drawable
             var isCrossing = false;
             foreach (var wordObject in objectsToCheck)
             {
-                if (wordObject.IsRayCrossingObject(segmentRay, out var crossPoint))
+                if (wordObject.IsRayCrossingObject(segmentRay, out var crossPoint, out var _))
                 {
                     var currentDistance = segmentRay.first.DecartDistance(crossPoint);
                     if (currentDistance < distanceToObject)
@@ -190,6 +190,7 @@ public class CameraMan : Drawable
         var leftViewAngle = person.DirectionRad + Fov / 2; // because we turn overclock as pi
         objectsToCheck.ForEach(o => o.DistancePoints.Clear());
         objectsToCheck.ForEach(o => o.RayCounterList.Clear());
+        objectsToCheck.ForEach(o => o.LineList.Clear());
         objectsToCheck.ForEach(o => o.RayCounter = 0);
         for (var i = 0; i < RaysCount; i++)
         {
@@ -200,15 +201,17 @@ public class CameraMan : Drawable
             var segmentRay = (first: person.Center, second: point);
             var distanceToObject = float.MaxValue;
             Object2d? crossingObject = null;
+            (Vector2f first, Vector2f second)? crossSegment = null;
             foreach (var wordObject in objectsToCheck)
             {
-                if (wordObject.IsRayCrossingObject(segmentRay, out var crossPoint))
+                if (wordObject.IsRayCrossingObject(segmentRay, out var crossPoint, out var tempCrossSegment))
                 {
                     var currentDistance = segmentRay.first.DecartDistance(crossPoint);
                     if (currentDistance < distanceToObject)
                     {
                         distanceToObject = currentDistance;
                         point = crossPoint;
+                        crossSegment = tempCrossSegment;
                         crossingObject = wordObject;
                     }
                 }
@@ -223,7 +226,7 @@ public class CameraMan : Drawable
             {
                 continue;
             }
-            crossingObject.RayCounterList.Add(new Tuple<int, Vector2f>(crossingObject.RayCounter++, point));
+
             // кажущийся_размер_в_пикселях = (высота_объекта * высота_экрана) / (2 * расстояние * tan(fov_vertical / 2))
             var originalWallHeight = 40;
             //var fov_vertical_radians = 2 * Math.Atan(Math.Tan(Fov / 2) * Resources.ScreenHeight / Resources.ScreenWidth);
@@ -232,10 +235,16 @@ public class CameraMan : Drawable
             //var coss = ((float)currentAngle - person.DirectionRad) * 180 / Math.PI;
 
             float distanceCorrected = distanceToObject * MathF.Cos(MathF.Abs((float)currentAngle - person.DirectionRad)); // Учет угла
-
+           
             var height = Resources.ScreenHeight / distanceCorrected * originalWallHeight;
             //var height2 = Resources.ScreenHeight / distanceToObject * originalWallHeight;
+            if (crossSegment == null)
+            {
 
+            }
+            var vDistance = Math.Abs(Helper.DecartDistance(crossSegment.Value.first, point));
+            var tuple = new Tuple<int, Vector2f, float, float>(crossingObject.RayCounter++, point, distanceCorrected, vDistance);
+            crossingObject.RayCounterList.Add(tuple);
             //var height = (float)((originalWallHeight * Resources.ScreenHeight) /
             //                             (distanceCorrected * Math.Tan(fov_vertical_radians / 2)));
             //var heightCpp = (1 - 1 / distanceToObject) * Resources.ScreenHeight / 2;
@@ -254,14 +263,19 @@ public class CameraMan : Drawable
             objects3d.Points.Add(new Vector2f(xScreenLeft + xWidth, xScreenRight - height ));
             objects3d.Points.Add(new Vector2f(xScreenLeft + xWidth, xScreenRight + height ));
             objects3d.Points.Add(new Vector2f(xScreenLeft, xScreenRight + height ));
+            crossingObject.LineList.Add(objects3d);
 
-            var sprite = new Sprite(Resources.TextureBrick, new IntRect((int)xScreenLeft, 0, (int)xWidth, (int)height*2));
-            sprite.Position = new Vector2f(xScreenLeft, xScreenRight - height );
+            target.Draw(objects3d);
 
-            //sprite.Color = new Color(255, 255, 255, 195);
+            Resources.TextureBrick.Repeated = true;
+            //var sprite = new Sprite(Resources.TextureBrick, new IntRect((int)0, 0, (int)xWidth, (int)height*2));
+            //sprite.Position = new Vector2f(xScreenLeft, xScreenRight - height);
+
+            var sprite = new Sprite(Resources.TextureBrick, new IntRect((int)xScreenLeft, 0, (int)xWidth, (int)height * 2));
+            sprite.Position = new Vector2f(xScreenLeft, xScreenRight - height);
+
+            Console.WriteLine(sprite.Position);
             target.Draw(sprite);
-
-            //target.Draw(objects3d);
 
 
             //if (i % 10 == 0)
@@ -277,5 +291,24 @@ public class CameraMan : Drawable
             //    target.Draw(text2);
             //}
         }
+
+
+        //foreach (var object2d in objectsToCheck)
+        //{
+        //    if (object2d.RayCounterList.Count == 0)
+        //    {
+        //        continue;
+        //    }
+        //    Resources.TextureBrick.Repeated = true;
+        //    var xWidth =50;
+        //    var i = 0;
+        //    var f = object2d.LineList.First();
+        //    var l = object2d.LineList.Last();
+        //    var sprite = new Sprite(Resources.TextureBrick, new IntRect((int)0, 0, (int)(l.Points.First().X - f.Points.First().X), (int)l.Points.First().Y));
+        //    sprite.Position = f.Points.First();
+        //    Console.WriteLine(sprite.Position);
+        //    target.Draw(sprite);
+        //}
+
     }
 }

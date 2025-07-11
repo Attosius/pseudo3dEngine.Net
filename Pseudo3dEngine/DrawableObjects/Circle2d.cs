@@ -20,10 +20,11 @@ public class Circle2d : Object2d
         Radius = radius;
     }
 
-    public override bool IsRayCrossingObject((Vector2f first, Vector2f second) segmentRay, out Vector2f crossPoint)
+    public override bool IsRayCrossingObject((Vector2f first, Vector2f second) segmentRay, out Vector2f crossPoint, out (Vector2f first, Vector2f second)? segmentCrossingObj)
     {
         crossPoint = default;
-        var isCross = false; 
+        var isCross = false;
+        segmentCrossingObj = null;
         var direction = segmentRay.second - segmentRay.first;
         var start = segmentRay.first;
         double kA = direction.X * direction.X + direction.Y * direction.Y;
@@ -58,6 +59,7 @@ public class Circle2d : Object2d
         }
 
 
+        segmentCrossingObj = new(crossPoint, crossPoint);
         return isCross;
     }
 
