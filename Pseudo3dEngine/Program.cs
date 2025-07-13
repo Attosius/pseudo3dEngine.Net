@@ -229,7 +229,16 @@ namespace Pseudo3dEngine
             if (diff != 0)
             {
                 cameraMan.MouseViewPosition = mousePositionNewX;
-                person.DirectionRad += person.SpeedTurn * (float)elapsedTime * diff;
+                //person.DirectionRad += person.SpeedTurn * (float)elapsedTime * diff;
+            }
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Q))
+            {
+                person.DirectionRad += person.SpeedTurn * elapsedTime;
+            }
+
+            if (Keyboard.IsKeyPressed(Keyboard.Key.E))
+            {
+                person.DirectionRad -= person.SpeedTurn * elapsedTime;
             }
         }
 
