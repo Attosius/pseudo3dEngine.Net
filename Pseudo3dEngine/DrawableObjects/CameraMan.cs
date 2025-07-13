@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using SFML.Graphics;
 using SFML.System;
+using static Pseudo3dEngine.DrawableObjects.CameraMan;
 
 namespace Pseudo3dEngine.DrawableObjects;
 
@@ -183,6 +184,17 @@ public class CameraMan : Drawable
         
     }
 
+
+    public class CrossSegment
+    {
+        public (Vector2f first, Vector2f second)? Segment { get; set; }
+        public float Distance { get; set; }
+        public Object2d Obj { get; set; }
+        public int RaysOnSegment { get; set; }
+        public Vector2f CrossPoint { get; set; }
+    }
+
+
     private void DrawObjects(RenderTarget target, Person person)
     {
         var deltaRay = Fov / RaysCount;
@@ -192,8 +204,11 @@ public class CameraMan : Drawable
         objectsToCheck.ForEach(o => o.RayCounterList.Clear());
         objectsToCheck.ForEach(o => o.LineList.Clear());
         objectsToCheck.ForEach(o => o.RayCounter = 0);
+        var dictDistances = new Dictionary<int, CrossSegment>();
+        var segmCounter = new Dictionary<Vector2f, int>();
         for (var i = 0; i < RaysCount; i++)
         {
+            var crossSegmentRet = new CrossSegment();
             var currentAngle = leftViewAngle - deltaRay * i;
             //while (currentAngle > Math.PI) currentAngle -= 2 * Math.PI;
             //while (currentAngle < -Math.PI) currentAngle += 2 * Math.PI;
@@ -206,6 +221,7 @@ public class CameraMan : Drawable
             {
                 if (wordObject.IsRayCrossingObject(segmentRay, out var crossPoint, out var tempCrossSegment))
                 {
+                    //crossingObject.RayCounter++;
                     var currentDistance = segmentRay.first.DecartDistance(crossPoint);
                     if (currentDistance < distanceToObject)
                     {
@@ -213,8 +229,12 @@ public class CameraMan : Drawable
                         point = crossPoint;
                         crossSegment = tempCrossSegment;
                         crossingObject = wordObject;
-                        var segmLen = Math.Abs(Helper.DecartDistance(crossSegment.Value.second, crossSegment.Value.first));
-                        crossingObject.UDistance = Math.Abs(Helper.DecartDistance(crossSegment.Value.second, point) / segmLen);
+                        //var segmLen = Math.Abs(Helper.DecartDistance(crossSegment.Value.second, crossSegment.Value.first));
+                        crossingObject.UDistance = Math.Abs(Helper.DecartDistance(crossSegment.Value.second, point));
+                        crossSegmentRet.Distance = distanceToObject;
+                        crossSegmentRet.Segment = crossSegment;
+                        crossSegmentRet.Obj = crossingObject;
+                        crossSegmentRet.CrossPoint = point;
 
                     }
                 }
@@ -230,6 +250,17 @@ public class CameraMan : Drawable
                 continue;
             }
 
+            dictDistances[i] = crossSegmentRet;
+
+            if (segmCounter.TryGetValue(crossSegment.Value.first, out var count))
+            {
+                segmCounter[crossSegment.Value.first]++;
+            }else
+            {
+                segmCounter[crossSegment.Value.first] = 1;
+            }
+
+
             // кажущийся_размер_в_пикселях = (высота_объекта * высота_экрана) / (2 * расстояние * tan(fov_vertical / 2))
             var originalWallHeight = 40;
             //var fov_vertical_radians = 2 * Math.Atan(Math.Tan(Fov / 2) * Resources.ScreenHeight / Resources.ScreenWidth);
@@ -238,7 +269,11 @@ public class CameraMan : Drawable
             //var coss = ((float)currentAngle - person.DirectionRad) * 180 / Math.PI;
 
             float distanceCorrected = distanceToObject * MathF.Cos(MathF.Abs((float)currentAngle - person.DirectionRad)); // Учет угла
-           
+
+            var h1 = (1 - 1 / distanceToObject) * Resources.ScreenHeight / 2;
+            var h2 = (1 + 1 / distanceToObject) * Resources.ScreenHeight / 2;
+            //h.first = (1 - 1 / distance) * SCREEN_HEIGHT / 2;
+            //h.second = (1 + 1 / distance) * SCREEN_HEIGHT / 2;
             var height = Resources.ScreenHeight / distanceToObject * originalWallHeight;
             //var height2 = Resources.ScreenHeight / distanceToObject * originalWallHeight;
             //var uDistance = Math.Abs(Helper.DecartDistance(crossSegment.Value.second, point));
@@ -246,7 +281,10 @@ public class CameraMan : Drawable
             if (crossSegment != null)
             {
             }
-            var tuple = new Tuple<int, Vector2f, float, float>(crossingObject.RayCounter++, point, distanceCorrected, crossingObject.UDistance);
+            var segmLenth = Math.Abs(Helper.DecartDistance(crossSegment.Value.second, crossSegment.Value.first));
+            var rayLenght = segmLenth / crossingObject.RayCounter;
+
+            var tuple = new Tuple<int, Vector2f, float, float>(crossingObject.RayCounter, point, distanceCorrected, crossingObject.UDistance);
             crossingObject.RayCounterList.Add(tuple);
             //var height = (float)((originalWallHeight * Resources.ScreenHeight) /
             //                             (distanceCorrected * Math.Tan(fov_vertical_radians / 2)));
@@ -283,12 +321,12 @@ public class CameraMan : Drawable
             var sprite = new Sprite(Resources.TextureBrick, new IntRect((int)(crossingObject.UDistance * Resources.TextureBrick.Size.X), 0, (int)xWidth, (int)height * 2));
             //var udist = uDistance * Resources.ScreenWidth;
             sprite.Position = new Vector2f(xScreenLeft, (float)Resources.ScreenHeight / 2 - height / 2);
-            target.Draw(sprite);
+            //target.Draw(sprite);
             // почему-то vDistance != xWidth
             var text = new Text($"{i},{crossingObject.UDistance:0}|", Resources.FontCourerNew, 12);
             text.Position = new Vector2f(xScreenLeft, (float)Resources.ScreenHeight / 2 - height / 2);
             text.FillColor = Color.Black;
-            target.Draw(text);
+            //target.Draw(text);
             Console.WriteLine($"RayCount: {i}, vDistance: {crossingObject.UDistance}, xWidth {xWidth},s {crossSegment.Value.second},p {point}");
 
             //if (i % 10 == 0)
@@ -305,6 +343,39 @@ public class CameraMan : Drawable
             //}
         }
 
+
+        //sprite.setTexture(W_world[v_distances[i].object].loadTexture()); // для луча пересечения берем объект и грузим его текстуру
+        //sprite.setTextureRect(sf::IntRect(v_distances[i].progress * SCREEN_WIDTH, 0, SCREEN_WIDTH / DISTANCES_SEGMENTS, SCREEN_HEIGHT));// двигаем текстуру по progress
+        //sprite.setPosition(sf::Vector2f(SCREEN_WIDTH * (i) / DISTANCES_SEGMENTS, SCREEN_HEIGHT / 2 - (h2 - h1) / 2)); // абсолютная позиция
+
+
+        foreach (var crSegm in dictDistances.Values)
+        {
+            crSegm.RaysOnSegment = segmCounter[crSegm.Segment.Value.first];
+        }
+
+        for (int i = 0; i < RaysCount; i++)
+        {
+            if (!dictDistances.TryGetValue(i, out var crossSegment))
+            {
+                continue;
+            }
+            var height = Resources.ScreenHeight / crossSegment.Distance * 40;
+            var UDistance = Math.Abs(Helper.DecartDistance(crossSegment.Segment.Value.second, crossSegment.CrossPoint));
+
+            var oneRayLenght = Math.Abs(Helper.DecartDistance(crossSegment.Segment.Value.second, crossSegment.Segment.Value.first)) / crossSegment.RaysOnSegment;
+
+            var raysCountInUdist = UDistance / oneRayLenght;
+
+
+            var xWidth = Resources.ScreenWidth / RaysCount;
+            var xScreenLeft = i * xWidth;
+            var sprite = new Sprite(Resources.TextureBrick, new IntRect((int)(raysCountInUdist * xWidth), 0, (int)xWidth, (int)height * 2));
+            //var udist = uDistance * Resources.ScreenWidth;
+            sprite.Position = new Vector2f(xScreenLeft, (float)Resources.ScreenHeight / 2 - height / 2);
+            target.Draw(sprite);
+
+        }
 
         //foreach (var object2d in objectsToCheck)
         //{

@@ -43,7 +43,7 @@ namespace Pseudo3dEngine
             {
                 if (_textureBrick == null)
                 {
-                    _textureBrick = new Texture(Path.Combine(Directory.GetCurrentDirectory(), "Resources/brickWall.jpg"));
+                    _textureBrick = new Texture(Path.Combine(Directory.GetCurrentDirectory(), "Resources/brickSmall.png"));
                 }
                 return _textureBrick;
             }
