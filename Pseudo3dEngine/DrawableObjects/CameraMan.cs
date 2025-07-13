@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using SFML.Graphics;
 using SFML.System;
-using static Pseudo3dEngine.DrawableObjects.CameraMan;
 
 namespace Pseudo3dEngine.DrawableObjects;
 
@@ -10,7 +9,7 @@ public class CameraMan : Drawable
 {
     public float DistanceView = 1400f;
     public static int Counter = 0;
-    public static int RaysCount = 150;
+    public static int RaysCount = 50;
     public List<long> Ticks = new(100);
     public int MouseViewPosition = 0;
     public double Fov { get; set; } = Math.PI / 6;
@@ -318,16 +317,17 @@ public class CameraMan : Drawable
             //var uDistScaled = d * xWidth;
             // uDistScaled +4pix
             //var sprite = new Sprite(Resources.TextureBrick, new IntRect(int left, int top, int width, int height));
-            var sprite = new Sprite(Resources.TextureBrick, new IntRect((int)(crossingObject.UDistance * Resources.TextureBrick.Size.X), 0, (int)xWidth, (int)height * 2));
+            //var sprite = new Sprite(Resources.TextureBrick, new IntRect((int)(crossingObject.UDistance * Resources.TextureBrick.Size.X), 0, (int)xWidth, (int)height * 2));
             //var udist = uDistance * Resources.ScreenWidth;
-            sprite.Position = new Vector2f(xScreenLeft, (float)Resources.ScreenHeight / 2 - height / 2);
+            //sprite.Position = new Vector2f(xScreenLeft, (float)Resources.ScreenHeight / 2 - height / 2);
             //target.Draw(sprite);
-            // почему-то vDistance != xWidth
-            var text = new Text($"{i},{crossingObject.UDistance:0}|", Resources.FontCourerNew, 12);
-            text.Position = new Vector2f(xScreenLeft, (float)Resources.ScreenHeight / 2 - height / 2);
-            text.FillColor = Color.Black;
+            //// почему-то vDistance != xWidth
+            //var text = new Text($"{i},{crossingObject.UDistance:0}|", Resources.FontCourerNew, 12);
+            //text.Position = new Vector2f(xScreenLeft, (float)Resources.ScreenHeight / 2 - height / 2);
+            //text.FillColor = Color.Black;
             //target.Draw(text);
-            Console.WriteLine($"RayCount: {i}, vDistance: {crossingObject.UDistance}, xWidth {xWidth},s {crossSegment.Value.second},p {point}");
+            //Console.WriteLine($"RayCount: {i}, vDistance: {crossingObject.UDistance}, xWidth {xWidth},s {crossSegment.Value.second},p {point}");
+            Console.WriteLine($"RayCount: {i}, height: {height}");
 
             //if (i % 10 == 0)
             //{
@@ -372,8 +372,12 @@ public class CameraMan : Drawable
             var xScreenLeft = i * xWidth;
             var sprite = new Sprite(Resources.TextureBrick, new IntRect((int)(raysCountInUdist * xWidth), 0, (int)xWidth, (int)height * 2));
             //var udist = uDistance * Resources.ScreenWidth;
-            sprite.Position = new Vector2f(xScreenLeft, (float)Resources.ScreenHeight / 2 - height / 2);
+            
+            sprite.Position = new Vector2f(xScreenLeft, (float)Resources.ScreenHeight / 2 - height);
+            var scale = height * 2 / Resources.ScreenHeight;
+            sprite.Scale = new Vector2f(1, scale);
             target.Draw(sprite);
+            Console.WriteLine($"RayCount: {i}, vDistance: {raysCountInUdist * xWidth}, sprite.Scale {sprite.Scale}");
 
         }
 

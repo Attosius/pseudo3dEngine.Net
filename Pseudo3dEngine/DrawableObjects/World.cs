@@ -135,17 +135,17 @@ public class World : Drawable
         //Objects.Add(square);
         //AddSquareScaled(square, scale);
 
-        //square = new Object2d
-        //{
-        //    Name = "RectDown",
-        //    Type = Object2dTypes.Wall
-        //};
-        //square.Points.Add(new Vector2f(250, 400));
-        //square.Points.Add(new Vector2f(450, 400));
-        //square.Points.Add(new Vector2f(450, 450));
-        //square.Points.Add(new Vector2f(250, 450));
-        //Objects.Add(square);
-        //AddSquareScaled(square, scale);
+        square = new Object2d
+        {
+            Name = "RectDown",
+            Type = Object2dTypes.Wall
+        };
+        square.Points.Add(new Vector2f(250, 400));
+        square.Points.Add(new Vector2f(450, 400));
+        square.Points.Add(new Vector2f(450, 450));
+        square.Points.Add(new Vector2f(250, 450));
+        Objects.Add(square);
+        AddSquareScaled(square, scale);
 
 
         //square = new Object2d
