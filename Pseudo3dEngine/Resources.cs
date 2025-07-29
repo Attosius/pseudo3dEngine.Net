@@ -37,13 +37,15 @@ namespace Pseudo3dEngine
                 return _textureSky;
             }
         }
+        public static string BrickPath = Path.Combine(Directory.GetCurrentDirectory(), "Resources/brickWall1200.jpg");
         public static Texture TextureBrick
         {
             get
             {
                 if (_textureBrick == null)
                 {
-                    _textureBrick = new Texture(Path.Combine(Directory.GetCurrentDirectory(), "Resources/brickWall1200.jpg"));
+                    var filename = Path.Combine(Directory.GetCurrentDirectory(), "Resources/brickWall12003.jpg");
+                    _textureBrick = new Texture(filename);
                 }
                 return _textureBrick;
             }

@@ -45,11 +45,28 @@ namespace Pseudo3dEngine
                 {
                     Person = new Person()
                 };
+
+                var world2 = new World2();
+                foreach (var worldObject in world.Objects)
+                {
+                    var point2Ds = worldObject.Points.Select(o => new Point2D(o.X, o.Y)).ToList();
+                    world2.AddObject(worldObject.Name, new Object2d2(new Point2D(), point2Ds, Resources.BrickPath));
+                }
+
+                var camera2 = new Camera2(world2, new Point2D(590, 390), 0);
+
                 var cameraMan = new CameraMan
                 {
                     World = world,
+                    World2 = world2,
+                    Camera2 = camera2,
                     MouseViewPosition = Mouse.GetPosition(window).X,
                 };
+
+
+
+
+
                 var mapCoordinates = new MapCoordinates(Resources.ScreenWidth, Resources.ScreenHeight);
                 //var mousePosition = new MousePosition(window);
                 // Start the game loop
@@ -229,7 +246,7 @@ namespace Pseudo3dEngine
             if (diff != 0)
             {
                 cameraMan.MouseViewPosition = mousePositionNewX;
-                //person.DirectionRad += person.SpeedTurn * (float)elapsedTime * diff;
+                person.DirectionRad += person.SpeedTurn * (float)elapsedTime * diff;
             }
             if (Keyboard.IsKeyPressed(Keyboard.Key.Q))
             {
