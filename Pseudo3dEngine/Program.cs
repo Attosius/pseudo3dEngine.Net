@@ -243,7 +243,7 @@ namespace Pseudo3dEngine
             }
             var mousePositionNewX = Mouse.GetPosition(window).X;
             var diff = cameraMan.MouseViewPosition - mousePositionNewX;
-            if (diff != 0)
+            if (diff != 0 && mapCoordinates.Visible)
             {
                 cameraMan.MouseViewPosition = mousePositionNewX;
                 person.DirectionRad += person.SpeedTurn * (float)elapsedTime * diff;

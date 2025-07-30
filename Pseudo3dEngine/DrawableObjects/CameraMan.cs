@@ -11,7 +11,7 @@ public class CameraMan : Drawable
 {
     public float DistanceView = 300f;
     public static int Counter = 0;
-    public static int RaysCount = 300;
+    public static int RaysCount = 10;
     public List<long> Ticks = new(100);
     public int MouseViewPosition = 0;
     public double Fov { get; set; } = Math.PI / 6;
@@ -39,7 +39,7 @@ public class CameraMan : Drawable
         DrawObjects(target, person);
 
         DrawViewSector(target, person, Object2dTypes.Wall);
-        DrawViewSector(target, mapPerson, Object2dTypes.MapWall);
+        //DrawViewSector(target, mapPerson, Object2dTypes.MapWall);
 
 
         //var ang = new Circle2d(10);
@@ -171,7 +171,7 @@ public class CameraMan : Drawable
         // green points on horizont
         for (int i = 0; i < viewSector.Points.Count; i++)
         {
-            var crossShape = new CircleShape(1);
+            var crossShape = new CircleShape(2);
             crossShape.FillColor = Color.Green;
             crossShape.Position = viewSector.Points[i] - new Vector2f(1, 1);
             target.Draw(crossShape);
@@ -292,7 +292,7 @@ public class CameraMan : Drawable
             var h2 = (1 + 1 / distanceToObject) * Resources.ScreenHeight / 2;
             //h.first = (1 - 1 / distance) * SCREEN_HEIGHT / 2;
             //h.second = (1 + 1 / distance) * SCREEN_HEIGHT / 2;
-            var height = Resources.ScreenHeight / distanceToObject * originalWallHeight;
+            var heightHalf = Resources.ScreenHeight / distanceToObject * originalWallHeight;
             //var height2 = Resources.ScreenHeight / distanceToObject * originalWallHeight;
             //var uDistance = Math.Abs(Helper.DecartDistance(crossSegment.Value.second, point));
             //uDistance = crossSegment.Value.second - point);
@@ -314,24 +314,36 @@ public class CameraMan : Drawable
             var objects3d = new Object2d();
             //var colorRate2 = (byte)Math.Abs(170 - (distanceToObject / 5)); // 170-gray, 5 - speed of shadow
             var colorRate = (byte)137;
-            objects3d.FillColor = new Color(colorRate, colorRate, colorRate);
+            objects3d.FillColor = new Color(colorRate, colorRate, colorRate, 10);
             objects3d.OutlineThickness = 0;
-            var xScreenRight = (float)Resources.ScreenHeight / 2;
+            var yScreenMiddle = (float)Resources.ScreenHeight / 2;
             //objects3d.Position = new Vector2f(xScreenLeft, xScreenRight);
-            objects3d.Points.Add(new Vector2f(xScreenLeft, xScreenRight - height ));
-            objects3d.Points.Add(new Vector2f(xScreenLeft + xWidth, xScreenRight - height ));
-            objects3d.Points.Add(new Vector2f(xScreenLeft + xWidth, xScreenRight + height ));
-            objects3d.Points.Add(new Vector2f(xScreenLeft, xScreenRight + height ));
+            objects3d.Points.Add(new Vector2f(xScreenLeft, yScreenMiddle - heightHalf ));
+            objects3d.Points.Add(new Vector2f(xScreenLeft + xWidth, yScreenMiddle - heightHalf ));
+            objects3d.Points.Add(new Vector2f(xScreenLeft + xWidth, yScreenMiddle + heightHalf ));
+            objects3d.Points.Add(new Vector2f(xScreenLeft, yScreenMiddle + heightHalf ));
+            objects3d.OutlineThickness = 1;
             crossingObject.LineList.Add(objects3d);
 
-            target.Draw(objects3d);
 
             Resources.TextureBrick.Repeated = true;
-            
+
+            var alpha = 255 * (1 - distanceToObject / DistanceView);
+            if (alpha > 255)
+                alpha = 255;
+            if (alpha < 0)
+                alpha = 0;
+
             var sprite = new Sprite(Resources.TextureBrick, new IntRect((int)(len * 30), 0, (int)xWidth, (int)Resources.ScreenHeight));
-            sprite.Position = new Vector2f(xScreenLeft, xScreenRight - height);
-            sprite.Scale = new Vector2f(1f, (float)(height*2) / Resources.ScreenHeight);
-            target.Draw(sprite);
+            sprite.Position = new Vector2f(xScreenLeft, yScreenMiddle - heightHalf);
+            sprite.Scale = new Vector2f(1f, (float)(heightHalf*2) / Resources.ScreenHeight);
+            //sprite.Color = new Color(255, 255, 255, (byte)alpha);
+            target.Draw(sprite);;
+            //target.Draw(objects3d);
+
+
+            //target.Draw(objects3d);
+
 
             if (i % 100 == 0)
             {
@@ -451,22 +463,22 @@ public class CameraMan : Drawable
             //}
 
 
-            var objects3d = new Object2d();
-            //var colorRate2 = (byte)Math.Abs(170 - (distanceToObject / 5)); // 170-gray, 5 - speed of shadow
-            var colorRate = (byte)200;
-            objects3d.FillColor = new Color(colorRate, colorRate, colorRate, 0);
-            objects3d.OutlineThickness = 1;
-            var xScreenRight = (float)Resources.ScreenHeight / 2;
-            //objects3d.Position = new Vector2f(xScreenLeft, xScreenRight);
-            objects3d.Points.Add(new Vector2f(xScreenLeft, h1.Item1));
-            objects3d.Points.Add(new Vector2f(xScreenLeft + xWidth, h1.Item1));
-            objects3d.Points.Add(new Vector2f(xScreenLeft + xWidth, h1.Item2));
-            objects3d.Points.Add(new Vector2f(xScreenLeft, h1.Item2));
+            //var objects3d = new Object2d();
+            ////var colorRate2 = (byte)Math.Abs(170 - (distanceToObject / 5)); // 170-gray, 5 - speed of shadow
+            //var colorRate = (byte)200;
+            //objects3d.FillColor = new Color(colorRate, colorRate, colorRate, 0);
+            //objects3d.OutlineThickness = 1;
+            //var xScreenRight = (float)Resources.ScreenHeight / 2;
+            ////objects3d.Position = new Vector2f(xScreenLeft, xScreenRight);
+            //objects3d.Points.Add(new Vector2f(xScreenLeft, h1.Item1));
+            //objects3d.Points.Add(new Vector2f(xScreenLeft + xWidth, h1.Item1));
+            //objects3d.Points.Add(new Vector2f(xScreenLeft + xWidth, h1.Item2));
+            //objects3d.Points.Add(new Vector2f(xScreenLeft, h1.Item2));
 
-            var text = new Text($"{d1.progress:0.0}", Resources.FontCourerNew, 8);
-            text.Position = new Vector2f(xScreenLeft, h1.Item2);
-            text.FillColor = Color.Black;
-            target.Draw(text);
+            //var text = new Text($"{d1.progress:0.0}", Resources.FontCourerNew, 8);
+            //text.Position = new Vector2f(xScreenLeft, h1.Item2);
+            //text.FillColor = Color.Black;
+            ////target.Draw(text);
 
             //target.Draw(objects3d);
 

@@ -15,7 +15,7 @@ public class World : Drawable
         Object2d? square = null;
         //square = new Object2d
         //{
-        //    Name = "RectLeft",
+        //    Name = "RectLeftSm",
         //    Type = Object2dTypes.Wall
         //};
         //square.Points.Add(new Vector2f(125, 150));
@@ -24,11 +24,11 @@ public class World : Drawable
         //square.Points.Add(new Vector2f(125, 200));
         //Objects.Add(square);
         //AddSquareScaled(square, scale);
-        /////////////////////
+        ///////////////////////
 
         //square = new Object2d
         //{
-        //    Name = "RectRight",
+        //    Name = "RectRightSm",
         //    Type = Object2dTypes.Wall
         //};
         //square.Points.Add(new Vector2f(1025, 150));
@@ -37,21 +37,21 @@ public class World : Drawable
         //square.Points.Add(new Vector2f(1025, 200));
         //Objects.Add(square);
         //AddSquareScaled(square, scale);
-        /////////////////////
+        ///////////////////////
 
         //square = new Object2d
         //{
-        //    Name = "RectRight",
+        //    Name = "RectRightFr",
         //    Type = Object2dTypes.Wall
         //};
         //square.Points.Add(new Vector2f(200, 150));
         //square.Points.Add(new Vector2f(1025, 150));
         //square.Points.Add(new Vector2f(1025, 175));
         //square.Points.Add(new Vector2f(200, 175));
-        ////Objects.Add(square);
-        ////AddSquareScaled(square, scale);
-        
-        ///////////////////
+        //Objects.Add(square);
+        //AddSquareScaled(square, scale);
+
+        /////////////////
 
         //square = new Object2d
         //{
@@ -121,7 +121,7 @@ public class World : Drawable
         square.Points.Add(new Vector2f(625, 325));
         square.Points.Add(new Vector2f(575, 325));
         Objects.Add(square);
-        //AddSquareScaled(square, scale);
+        AddSquareScaled(square, scale);
 
         //square = new Object2d
         //{

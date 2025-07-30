@@ -42,7 +42,8 @@ public class MapCoordinates : Drawable
 
     public void Draw(RenderTarget target, RenderStates states)
     {
-        if (!Visible)
+        //if (!Visible)
+        if (true)
         {
             return;
         }

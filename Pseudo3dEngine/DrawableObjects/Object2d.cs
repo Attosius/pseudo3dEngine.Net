@@ -48,13 +48,13 @@ public class Object2d : Drawable
             if (isCurrentCross)
             {
                 isCross = true;
-                segmentCrossingObj = segmentObj;
                 //var currentDistance = Math.Abs(currentCrossPoint.X - segmentRay.first.X) + Math.Abs(currentCrossPoint.Y - segmentRay.first.Y);
                 var currentDistance = segmentRay.first.DecartDistance(currentCrossPoint);
                 if (currentDistance < distance)
                 {
                     distance = currentDistance;
                     crossPoint = currentCrossPoint;
+                    segmentCrossingObj = segmentObj;
                 }
             }
 
