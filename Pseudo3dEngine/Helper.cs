@@ -28,6 +28,7 @@ namespace Pseudo3dEngine
         public static float DecartDistance(this Vector2f a, Vector2f b)
         {
             return MathF.Sqrt((b.X - a.X) * (b.X - a.X) + (b.Y - a.Y) * (b.Y - a.Y));
+                    //Math.Sqrt(b.X * b.X + b.Y * b.Y)
         }
     }
 }

@@ -9,9 +9,9 @@ namespace Pseudo3dEngine.DrawableObjects;
 
 public class CameraMan : Drawable
 {
-    public float DistanceView = 300f;
+    public float DistanceView = 1300f;
     public static int Counter = 0;
-    public static int RaysCount = 10;
+    public static int RaysCount = 1200;
     public List<long> Ticks = new(100);
     public int MouseViewPosition = 0;
     public double Fov { get; set; } = Math.PI / 6;
@@ -38,8 +38,8 @@ public class CameraMan : Drawable
         ///////////////////////////////// 3d
         DrawObjects(target, person);
 
-        DrawViewSector(target, person, Object2dTypes.Wall);
-        //DrawViewSector(target, mapPerson, Object2dTypes.MapWall);
+        //DrawViewSector(target, person, Object2dTypes.Wall);
+        DrawViewSector(target, mapPerson, Object2dTypes.MapWall);
 
 
         //var ang = new Circle2d(10);
@@ -245,6 +245,8 @@ public class CameraMan : Drawable
                         crossSegmentRet.CrossPoint = point;
                         var valueSecond = crossSegment.Value.second - crossPoint;
                         len = Math.Sqrt(valueSecond.X * valueSecond.X + valueSecond.Y * valueSecond.Y);
+                        len = Math.Abs(Helper.DecartDistance(crossSegment.Value.second, point));
+
                         //public double Abs() => Math.Sqrt(x * x + y * y);
 
                     }
@@ -333,13 +335,17 @@ public class CameraMan : Drawable
                 alpha = 255;
             if (alpha < 0)
                 alpha = 0;
+            // len = 5, 11 - и все в начале идет, а надо сместить, увеличить лен до размера полотна. может брать процент от размера экрана
 
-            var sprite = new Sprite(Resources.TextureBrick, new IntRect((int)(len * 30), 0, (int)xWidth, (int)Resources.ScreenHeight));
+            var horizonScale = Resources.TextureBrick.Size.X / 50; // 50 - size of object in px to wear all texture
+
+            var sprite = new Sprite(Resources.TextureBrick, new IntRect((int)(len * horizonScale), 0, (int)xWidth, (int)Resources.ScreenHeight));
             sprite.Position = new Vector2f(xScreenLeft, yScreenMiddle - heightHalf);
             sprite.Scale = new Vector2f(1f, (float)(heightHalf*2) / Resources.ScreenHeight);
             //sprite.Color = new Color(255, 255, 255, (byte)alpha);
             target.Draw(sprite);;
-            //target.Draw(objects3d);
+            if (i==39)
+            target.Draw(objects3d);
 
 
             //target.Draw(objects3d);
