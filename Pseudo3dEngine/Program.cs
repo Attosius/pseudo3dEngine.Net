@@ -207,10 +207,31 @@ namespace Pseudo3dEngine
                 person.DirectionRad -= person.SpeedTurn * elapsedTime;
             }
 
-            if (Mouse.IsButtonPressed(Mouse.Button.Right))
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Space) && (DateTime.Now - person.LastEventInputUse).TotalMilliseconds > 300)
+            {
+
+                if (person.JumpYcoord == 150)
+                {
+                    person.JumpYcoord = 0;
+                }else
+                {
+                    person.JumpYcoord = 150;
+                }
+                person.LastEventInputUse = DateTime.Now;
+            }else
+            {
+                person.JumpYcoord -= 1 / elapsedTime * 0.2f;
+                if (person.JumpYcoord < 0)
+                {
+                    person.JumpYcoord = 0;
+                }
+            }
+
+            if (Mouse.IsButtonPressed(Mouse.Button.Right) && (DateTime.Now - person.LastEventInputUse).TotalMilliseconds > 300)
             {
                 //Con
                 cameraMan.IsUsingMouse = !cameraMan.IsUsingMouse;
+                person.LastEventInputUse = DateTime.Now;
             }
         }
 

@@ -26,6 +26,8 @@ public class Person : Object2d
     public float ForceSpeed = 200f;
     public float UsualSpeed = 100f;
     //public float DistanceView = 200f;
+    public float JumpYcoord = 0f;
+    public DateTime LastEventInputUse = DateTime.Now;
 
     public Person GetScaledForMapPerson()
     {

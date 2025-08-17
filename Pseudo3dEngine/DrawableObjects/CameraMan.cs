@@ -34,7 +34,7 @@ public class CameraMan : Drawable
         var mapPerson = person.GetScaledForMapPerson();
         CenterCamera = person.Center;
         CenterMapCamera = mapPerson.Center;
-        DrawSky(target);
+        DrawSky(target, person);
 
         ///////////////////////////////// 3d
         DrawObjects(target, person);
@@ -73,7 +73,7 @@ public class CameraMan : Drawable
 
     }
 
-    private void DrawSky(RenderTarget target)
+    private void DrawSky(RenderTarget target, Person person)
     {
 
         //var sky = new Object2d()
@@ -90,7 +90,7 @@ public class CameraMan : Drawable
         //sky.Points.Add(new Vector2f(0, Resources.SkyHeight));
         //target.Draw(sky);
         //Resources.TextureSky.Repeated = true;
-        var sprite = new Sprite(Resources.TextureSky, new IntRect(0, 0, (int)Resources.ScreenWidth, (int)Resources.SkyHeight));
+        var sprite = new Sprite(Resources.TextureSky, new IntRect(0, 0, (int)Resources.ScreenWidth, (int)Resources.SkyHeight + (int)person.JumpYcoord));
         sprite.Color = new Color(255, 255, 255, 195);
         target.Draw(sprite);
 
@@ -107,8 +107,8 @@ public class CameraMan : Drawable
             FillColor = new Color(255, 219, 128, 95),
             OutlineThickness = 0
         };
-        floor.Points.Add(new Vector2f(0, Resources.SkyHeight));
-        floor.Points.Add(new Vector2f(Resources.ScreenWidth, Resources.SkyHeight));
+        floor.Points.Add(new Vector2f(0, Resources.SkyHeight + person.JumpYcoord));
+        floor.Points.Add(new Vector2f(Resources.ScreenWidth, Resources.SkyHeight + person.JumpYcoord));
         floor.Points.Add(new Vector2f(Resources.ScreenWidth, Resources.ScreenHeight));
         floor.Points.Add(new Vector2f(0, Resources.ScreenHeight));
         target.Draw(floor);
@@ -208,7 +208,6 @@ public class CameraMan : Drawable
     private void DrawObjects(RenderTarget target, Person person)
     {
 
-
         //Distances.Clear();
         var deltaRay = Fov / RaysCount;
         var objectsToCheck = World.Objects.Where(o => o.Type == Object2dTypes.Wall).ToList();
@@ -263,7 +262,7 @@ public class CameraMan : Drawable
             var colorRate = (byte)137;
             objects3d.FillColor = new Color(colorRate, colorRate, colorRate, 10);
             objects3d.OutlineThickness = 0;
-            var yScreenMiddle = (float)Resources.ScreenHeight / 2;
+            var yScreenMiddle = (float)Resources.ScreenHeight / 2 + person.JumpYcoord;
             objects3d.Points.Add(new Vector2f(xScreenLeft, yScreenMiddle - heightHalf));
             objects3d.Points.Add(new Vector2f(xScreenLeft + xWidth, yScreenMiddle - heightHalf));
             objects3d.Points.Add(new Vector2f(xScreenLeft + xWidth, yScreenMiddle + heightHalf));
