@@ -15,20 +15,34 @@ public class World : Drawable
         Object2d? square = null;
         square = new Object2d
         {
-            Name = "RectLeftSm",
+            Name = "RectTowerLeft",
             Type = Object2dTypes.Wall
         };
         square.Points.Add(new Vector2f(125, 150));
         square.Points.Add(new Vector2f(200, 150));
         square.Points.Add(new Vector2f(200, 200));
         square.Points.Add(new Vector2f(125, 200));
+        //Objects.Add(square);
+        //AddSquareScaled(square, scale);
+        /////////////////////
+        ///
+        square = new Object2d
+        {
+            Name = "RectTowerLeft",
+            Type = Object2dTypes.Wall,
+            Position = new Vector2f(125, 150)
+        };
+        square.Points.Add(new Vector2f(0, 0));
+        square.Points.Add(new Vector2f(75, 0));
+        square.Points.Add(new Vector2f(75, 50));
+        square.Points.Add(new Vector2f(0, 50));
         Objects.Add(square);
         AddSquareScaled(square, scale);
         /////////////////////
 
         square = new Object2d
         {
-            Name = "RectRightSm",
+            Name = "RectTowerRight",
             Type = Object2dTypes.Wall
         };
         square.Points.Add(new Vector2f(1025, 150));
@@ -41,7 +55,7 @@ public class World : Drawable
 
         square = new Object2d
         {
-            Name = "RectRightFr",
+            Name = "RectLoongFrontMains",
             Type = Object2dTypes.Wall
         };
         square.Points.Add(new Vector2f(200, 150));
@@ -55,7 +69,7 @@ public class World : Drawable
 
         square = new Object2d
         {
-            Name = "RectVertLeft",
+            Name = "RectVerticalLeft",
             Type = Object2dTypes.Wall
         };
         square.Points.Add(new Vector2f(150, 200));
@@ -67,7 +81,7 @@ public class World : Drawable
 
         square = new Object2d
         {
-            Name = "RectVerlRight",
+            Name = "RectVerticalRight",
             Type = Object2dTypes.Wall
         };
         square.Points.Add(new Vector2f(1050, 200));
@@ -89,7 +103,7 @@ public class World : Drawable
 
         square = new Object2d
         {
-            Name = "SquareBigRight",
+            Name = "SquareBigNordEast",
             Type = Object2dTypes.Wall
         };
         square.Points.Add(new Vector2f(850, 250));
@@ -101,7 +115,7 @@ public class World : Drawable
 
         square = new Object2d
         {
-            Name = "SquareSmallL",
+            Name = "SquareNordWest",
             Type = Object2dTypes.Wall
         };
         square.Points.Add(new Vector2f(450, 275));
@@ -111,21 +125,35 @@ public class World : Drawable
         Objects.Add(square);
         AddSquareScaled(square, scale);
 
-        square = new Object2d
-        {
-            Name = "SquareSmallM",
-            Type = Object2dTypes.Wall
-        };
-        square.Points.Add(new Vector2f(575, 275));
-        square.Points.Add(new Vector2f(625, 275));
-        square.Points.Add(new Vector2f(625, 325));
-        square.Points.Add(new Vector2f(575, 325));
-        Objects.Add(square);
-        AddSquareScaled(square, scale);
+        //square = new Object2d
+        //{
+        //    Name = "SquareSmallMiddle",
+        //    Type = Object2dTypes.Wall
+        //};
+        //square.Points.Add(new Vector2f(575, 275));
+        //square.Points.Add(new Vector2f(625, 275));
+        //square.Points.Add(new Vector2f(625, 325));
+        //square.Points.Add(new Vector2f(575, 325));
+        //Objects.Add(square);
+        //AddSquareScaled(square, scale);
 
         square = new Object2d
         {
-            Name = "SquareSmallR",
+            Name = "SquareSmallMiddle",
+            Type = Object2dTypes.Wall,
+            Position = new Vector2f(575, 275)
+        };
+        square.Points.Add(new Vector2f(0, 0));
+        square.Points.Add(new Vector2f(50, 0));
+        square.Points.Add(new Vector2f(50, 50));
+        square.Points.Add(new Vector2f(0, 50));
+        Objects.Add(square);
+        AddSquareScaled(square, scale);
+
+
+        square = new Object2d
+        {
+            Name = "SquareSmallNordEast",
             Type = Object2dTypes.Wall
         };
         square.Points.Add(new Vector2f(700, 275));
@@ -181,7 +209,7 @@ public class World : Drawable
         {
             Name = $"{square.Name}_Scaled",
             FillColor = Color.Red,
-            //Position = positionMapShift,
+            Position = square.Position * scale,
             OutlineThickness = 1f,
             OutlineColor = Color.Black,
             Type = Object2dTypes.MapWall
