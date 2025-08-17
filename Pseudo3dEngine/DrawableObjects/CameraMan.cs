@@ -21,7 +21,7 @@ public class CameraMan : Drawable
     public World? World { get; set; }
     public bool IsUsingMouse = false;
 
-    public List<TextureParameters> Distances = new List<TextureParameters>();
+    //public List<TextureParameters> Distances = new List<TextureParameters>();
 
     public void Draw(RenderTarget target, RenderStates states)
     {
@@ -145,14 +145,14 @@ public class CameraMan : Drawable
                         distanceToObject = currentDistance;
                         point = crossPoint;
                     }
-                    isCrossing = true;;
+                    isCrossing = true; ;
                 }
             }
 
             viewSector.Points.Add(isCrossing ? point : pointToShowOnMap);
         }
 
-        
+
 
         //Ticks.Add(sw.ElapsedTicks);
         //if (Counter % 100 == 0)
@@ -191,7 +191,7 @@ public class CameraMan : Drawable
             }
 
         }
-        
+
     }
 
 
@@ -207,23 +207,20 @@ public class CameraMan : Drawable
 
     private void DrawObjects(RenderTarget target, Person person)
     {
-        Distances.Clear();
+
+
+        //Distances.Clear();
         var deltaRay = Fov / RaysCount;
         var objectsToCheck = World.Objects.Where(o => o.Type == Object2dTypes.Wall).ToList();
         var leftViewAngle = person.DirectionRad + Fov / 2; // because we turn overclock as pi
-        objectsToCheck.ForEach(o => o.DistancePoints.Clear());
-        objectsToCheck.ForEach(o => o.RayCounterList.Clear());
-        objectsToCheck.ForEach(o => o.LineList.Clear());
-        objectsToCheck.ForEach(o => o.RayCounter = 0);
-        var dictDistances = new Dictionary<int, CrossSegment>();
-        var segmCounter = new Dictionary<Vector2f, int>();
+
         for (var i = 0; i < RaysCount; i++)
         {
             var crossSegmentRet = new CrossSegment();
             var currentAngle = leftViewAngle - deltaRay * i;
             //while (currentAngle > Math.PI) currentAngle -= 2 * Math.PI;
             //while (currentAngle < -Math.PI) currentAngle += 2 * Math.PI;
-            var point = Helper.GetPointAtAngleAndDistance(person.Center, currentAngle, DistanceView);
+            var point = Helper.GetPointAtAngleAndDistance(person.Center, currentAngle, DistanceView); // point at the end of our view
             var segmentRay = (first: person.Center, second: point);
             var distanceToObject = float.MaxValue;
             Object2d? crossingObject = null;
@@ -233,7 +230,6 @@ public class CameraMan : Drawable
             {
                 if (wordObject.IsRayCrossingObject(segmentRay, out var crossPoint, out var tempCrossSegment))
                 {
-                    //crossingObject.RayCounter++;
                     var currentDistance = segmentRay.first.DecartDistance(crossPoint);
                     if (currentDistance < distanceToObject)
                     {
@@ -241,13 +237,6 @@ public class CameraMan : Drawable
                         point = crossPoint;
                         crossSegment = tempCrossSegment;
                         crossingObject = wordObject;
-                        crossingObject.UDistance = Math.Abs(Helper.DecartDistance(crossSegment.Value.second, point));
-                        crossSegmentRet.Distance = distanceToObject;
-                        crossSegmentRet.Segment = crossSegment;
-                        crossSegmentRet.Obj = crossingObject;
-                        crossSegmentRet.CrossPoint = point;
-                        //var valueSecond = crossSegment.Value.second - crossPoint;
-                        //len = Math.Sqrt(valueSecond.X * valueSecond.X + valueSecond.Y * valueSecond.Y);
                         len = Math.Abs(Helper.DecartDistance(crossSegment.Value.second, point));
 
                     }
@@ -258,7 +247,7 @@ public class CameraMan : Drawable
             {
                 continue;
             }
-            
+
 
             // кажущийся_размер_в_пикселях = (высота_объекта * высота_экрана) / (2 * расстояние * tan(fov_vertical / 2))
             var originalWallHeight = 40;
@@ -275,12 +264,12 @@ public class CameraMan : Drawable
             objects3d.FillColor = new Color(colorRate, colorRate, colorRate, 10);
             objects3d.OutlineThickness = 0;
             var yScreenMiddle = (float)Resources.ScreenHeight / 2;
-            objects3d.Points.Add(new Vector2f(xScreenLeft, yScreenMiddle - heightHalf ));
-            objects3d.Points.Add(new Vector2f(xScreenLeft + xWidth, yScreenMiddle - heightHalf ));
-            objects3d.Points.Add(new Vector2f(xScreenLeft + xWidth, yScreenMiddle + heightHalf ));
-            objects3d.Points.Add(new Vector2f(xScreenLeft, yScreenMiddle + heightHalf ));
+            objects3d.Points.Add(new Vector2f(xScreenLeft, yScreenMiddle - heightHalf));
+            objects3d.Points.Add(new Vector2f(xScreenLeft + xWidth, yScreenMiddle - heightHalf));
+            objects3d.Points.Add(new Vector2f(xScreenLeft + xWidth, yScreenMiddle + heightHalf));
+            objects3d.Points.Add(new Vector2f(xScreenLeft, yScreenMiddle + heightHalf));
             objects3d.OutlineThickness = 1;
-            crossingObject.LineList.Add(objects3d);
+            //crossingObject.LineList.Add(objects3d);
 
 
             Resources.TextureBrick.Repeated = true;
@@ -289,31 +278,22 @@ public class CameraMan : Drawable
             if (alpha > 255)
                 alpha = 255;
             if (alpha < 0)
-                alpha = 0;
+                alpha = 1;
             // len = 5, 11 - и все в начале идет, а надо сместить, увеличить лен до размера полотна. может брать процент от размера экрана
 
             var horizonScale = Resources.TextureBrick.Size.X / 50; // 50 - size of object in px to wear all texture
 
             var sprite = new Sprite(Resources.TextureBrick, new IntRect((int)(len * horizonScale), 0, (int)xWidth, (int)Resources.ScreenHeight));
             sprite.Position = new Vector2f(xScreenLeft, yScreenMiddle - heightHalf);
-            sprite.Scale = new Vector2f(1f, (float)(heightHalf*2) / Resources.ScreenHeight);
+            sprite.Scale = new Vector2f(1f, (float)(heightHalf * 2) / Resources.ScreenHeight);
             //sprite.Color = new Color(255, 255, 255, (byte)alpha);
-            target.Draw(sprite);;
+            target.Draw(sprite);
         }
 
-        
+
 
     }
 
-    
-
-}
 
 
-
-public class TextureParameters
-{
-    public double distance;
-    public double progress;
-    public string objectName;
 }

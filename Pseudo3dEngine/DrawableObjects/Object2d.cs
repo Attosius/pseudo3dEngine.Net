@@ -36,11 +36,14 @@ public class Object2d : Drawable
         var isCross = false;
         var distance = float.MaxValue;
         segmentCrossingObj = null;
-        if (Name == "Five")
+        if (Name.Contains("SquareSmallMiddle"))
         {
 
         }
-        (Vector2f first, Vector2f second) segmentObj = (first: Points[^1], second: Points[0]); // points[points.Count - 1]
+
+        var first = Points[^1] + Position;
+        var second = Points[0] + Position;
+        (Vector2f first, Vector2f second) segmentObj = (first: first, second: second); // points[points.Count - 1]
         for (var j = 0; j < Points.Count; j++)
         {
             var isCurrentCross = IsSegmentsCrossing(segmentRay, segmentObj, out var currentCrossPoint);
@@ -48,7 +51,6 @@ public class Object2d : Drawable
             if (isCurrentCross)
             {
                 isCross = true;
-                //var currentDistance = Math.Abs(currentCrossPoint.X - segmentRay.first.X) + Math.Abs(currentCrossPoint.Y - segmentRay.first.Y);
                 var currentDistance = segmentRay.first.DecartDistance(currentCrossPoint);
                 if (currentDistance < distance)
                 {
@@ -62,7 +64,7 @@ public class Object2d : Drawable
             {
                 break;
             }
-            segmentObj = (first: Points[j], second: Points[j + 1]);
+            segmentObj = (first: Points[j] + Position, second: Points[j + 1] + Position);
         }
 
         return isCross;

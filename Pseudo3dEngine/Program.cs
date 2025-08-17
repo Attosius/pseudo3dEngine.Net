@@ -23,7 +23,14 @@ namespace Pseudo3dEngine
                 {
                     Person = new Person()
                 };
-                
+
+                //world.Objects.ForEach(obj =>
+                //{
+                //    if (obj.Type == Object2dTypes.Wall)
+                //    {
+                //        obj.Position = obj.Position + new Vector2f(0, -150);
+                //    }
+                //});
 
                 var cameraMan = new CameraMan
                 {
