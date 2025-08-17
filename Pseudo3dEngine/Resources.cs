@@ -14,6 +14,7 @@ namespace Pseudo3dEngine
         private static Font? _fontCourerNew;
         private static Texture? _textureSky;
         private static Texture? _textureBrick;
+        private static Texture? _textureDesert;
 
         public static Font FontCourerNew
         {
@@ -48,6 +49,19 @@ namespace Pseudo3dEngine
                     _textureBrick = new Texture(filename);
                 }
                 return _textureBrick;
+            }
+        }
+
+        public static Texture TextureDesert
+        {
+            get
+            {
+                if (_textureDesert == null)
+                {
+                    var filename = Path.Combine(Directory.GetCurrentDirectory(), "Resources/desert1200.jpg");
+                    _textureDesert = new Texture(filename);
+                }
+                return _textureDesert;
             }
         }
     }

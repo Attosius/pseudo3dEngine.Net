@@ -17,49 +17,17 @@ namespace Pseudo3dEngine
                 var videoMode = new VideoMode(Resources.ScreenWidth, Resources.ScreenHeight);
                 var window = new RenderWindow(videoMode, "GL HF!");
                 window.Display();
-
-                //var texture = new Texture(@"d:\Projects\Pseudo3dEngine.Net\Pseudo3dEngine\cold_heart.jpeg");
-
-                //var circleShape = new CircleShape(50);
-                //circleShape.FillColor = Color.Green;
-
-                //var rectangle = new RectangleShape(new Vector2f(120f, 50f));
-                //rectangle.FillColor = new Color(255, 175, 174);
-                //rectangle.Size = new Vector2f(10, 10);
-                //rectangle.PersonPosition = new Vector2f(0, 0);
-                //rectangle.OutlineThickness = 2;
-                //rectangle.OutlineColor = new Color(255, 255, 255);
-
-                //var line = new RectangleShape (new Vector2f(10, 133));
-                //line.Rotation = 45;
-
-
-                //var lineArr = new Vertex[]
-                //{
-                //    new Vertex(new Vector2f(10, 50)),
-                //    new Vertex(new Vector2f(150, 150)),
-                //    new Vertex(new Vector2f(50, 10))
-                //};
+                
 
                 var world = new World
                 {
                     Person = new Person()
                 };
-
-                var world2 = new World2();
-                foreach (var worldObject in world.Objects)
-                {
-                    var point2Ds = worldObject.Points.Select(o => new Point2D(o.X, o.Y)).ToList();
-                    world2.AddObject(worldObject.Name, new Object2d2(new Point2D(), point2Ds, Resources.BrickPath));
-                }
-
-                var camera2 = new Camera2(world2, new Point2D(590, 390), 0);
+                
 
                 var cameraMan = new CameraMan
                 {
                     World = world,
-                    World2 = world2,
-                    Camera2 = camera2,
                     MouseViewPosition = Mouse.GetPosition(window).X,
                 };
 
@@ -96,32 +64,15 @@ namespace Pseudo3dEngine
                         while (sw.Elapsed.TotalMilliseconds < endTime)
                         {
                             // Может быть добавлена небольшая задержка для уменьшения нагрузки на CPU,
-                            // но это снизит точность.  Thread.Yield() может быть полезен здесь.
                             Thread.Yield();
                         }
 
                         currentTime = sw.Elapsed.TotalSeconds; // Обновляем currentTime после сна
                         elapsedTime = currentTime - lastTime;
                     }
-                    //Console.WriteLine($"elapsedTime after:{elapsedTime * 1000:0.000}");
                     lastTime = currentTime;
 
-
-                    //frameCount++;
-                    //if (frameCount > 70 && sw.ElapsedMilliseconds < 1000)
-                    //{
-                    //    continue;
-                    //}
-                    //if (sw.ElapsedMilliseconds > 1000)
-                    //{
-                    //    fps = frameCount;
-                    //    frameCount = 0;
-                    //    sw.Restart();
-                    //}
-
-                    //var elapsed = sw.ElapsedMilliseconds / (double)1000;
-                    //sw.Restart();
-                    //Thread.Sleep(10);
+                    
 
                     window.DispatchEvents();
                     window.Closed += (sender, _) => ((RenderWindow)sender!).Close();
@@ -129,16 +80,7 @@ namespace Pseudo3dEngine
                     InputEvents(window, cameraMan, mapCoordinates, (float)elapsedTime);
 
                     window.Clear();
-
-                    //window.Draw(sprite);
-
-                    //window.Draw(circleShape);
-                    //window.Draw(rectangle);
-                    //window.Draw(line);
-                    //window.Draw(cam);
-                    //window.Draw(lineArr, PrimitiveType.LineStrip);
-                    //window.Draw(person);
-
+                    
                     window.Draw(cameraMan);
                     window.Draw(world);
                     window.Draw(mapCoordinates);
@@ -243,7 +185,7 @@ namespace Pseudo3dEngine
             }
             var mousePositionNewX = Mouse.GetPosition(window).X;
             var diff = cameraMan.MouseViewPosition - mousePositionNewX;
-            if (diff != 0 && mapCoordinates.Visible)
+            if (diff != 0 && cameraMan.IsUsingMouse)
             {
                 cameraMan.MouseViewPosition = mousePositionNewX;
                 person.DirectionRad += person.SpeedTurn * (float)elapsedTime * diff;
@@ -256,6 +198,12 @@ namespace Pseudo3dEngine
             if (Keyboard.IsKeyPressed(Keyboard.Key.E))
             {
                 person.DirectionRad -= person.SpeedTurn * elapsedTime;
+            }
+
+            if (Mouse.IsButtonPressed(Mouse.Button.Right))
+            {
+                //Con
+                cameraMan.IsUsingMouse = !cameraMan.IsUsingMouse;
             }
         }
 
@@ -273,23 +221,4 @@ namespace Pseudo3dEngine
             window.Draw(text);
         }
     }
-
-    //public class MousePosition : Drawable
-    //{
-    //    private readonly WindowBase _window;
-    //    public Font Font = new Font(@"d:\Projects\Experimentals\Pseudo3dEngine\arial.ttf");
-
-    //    public MousePosition(WindowBase window)
-    //    {
-    //        _window = window;
-    //    }
-    //    public void Draw(RenderTarget target, RenderStates states)
-    //    {
-    //        var position = Mouse.GetPosition(_window);
-    //        var text = new Text($"({position.X},{position.Y})", Font, 6);
-    //        text.PersonPosition = circleShape.PersonPosition;
-    //        text.FillColor = Color.White;
-    //        target.Draw(text);
-    //    }
-    //}
 }
