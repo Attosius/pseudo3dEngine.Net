@@ -14,7 +14,9 @@ namespace Pseudo3dEngine
         private static Font? _fontCourerNew;
         private static Texture? _textureSky;
         private static Texture? _textureBrick;
+        private static Texture? _textureBrickRed;
         private static Texture? _textureDesert;
+        private static Texture? _textureColumn;
 
         public static Font FontCourerNew
         {
@@ -39,6 +41,19 @@ namespace Pseudo3dEngine
             }
         }
         public static string BrickPath = Path.Combine(Directory.GetCurrentDirectory(), "Resources/brickWall1200.jpg");
+        public static Texture TextureBrickRed
+        {
+            get
+            {
+                if (_textureBrickRed == null)
+                {
+                    var filename = Path.Combine(Directory.GetCurrentDirectory(), "Resources/brickWall12003.jpg");
+                    _textureBrickRed = new Texture(filename);
+                }
+                return _textureBrickRed;
+            }
+        }
+
         public static Texture TextureBrick
         {
             get
@@ -52,6 +67,18 @@ namespace Pseudo3dEngine
             }
         }
 
+        public static Texture TextureColumn
+        {
+            get
+            {
+                if (_textureColumn == null)
+                {
+                    var filename = Path.Combine(Directory.GetCurrentDirectory(), "Resources/column.jpg");
+                    _textureColumn = new Texture(filename);
+                }
+                return _textureColumn;
+            }
+        }
         public static Texture TextureDesert
         {
             get

@@ -21,10 +21,13 @@ public class Object2d : Drawable
     public float UDistance = 0;
     public List<Object2d> LineList = new();
 
+    public Texture Texture = Resources.TextureBrick;
+
     public List<(double angle, float distance)> DistancePoints = new();
 
     public Object2d()
     {
+
     }
 
     public Object2dTypes Type { get; set; }
@@ -72,6 +75,7 @@ public class Object2d : Drawable
 
     public virtual void Draw(RenderTarget target, RenderStates states)
     {
+        Texture.Repeated = true;
         var convexShape = new ConvexShape();
         convexShape.SetPointCount((uint)Points.Count);
         for (var i = 0; i < Points.Count; i++)

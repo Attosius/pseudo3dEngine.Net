@@ -16,7 +16,8 @@ public class World : Drawable
         square = new Object2d
         {
             Name = "RectTowerLeft",
-            Type = Object2dTypes.Wall
+            Type = Object2dTypes.Wall,
+            Texture = Resources.TextureBrick
         };
         square.Points.Add(new Vector2f(125, 150));
         square.Points.Add(new Vector2f(200, 150));
@@ -30,7 +31,8 @@ public class World : Drawable
         {
             Name = "RectTowerLeft",
             Type = Object2dTypes.Wall,
-            Position = new Vector2f(125, 150)
+            Position = new Vector2f(125, 150),
+            Texture = Resources.TextureBrickRed
         };
         square.Points.Add(new Vector2f(0, 0));
         square.Points.Add(new Vector2f(75, 0));
@@ -43,7 +45,8 @@ public class World : Drawable
         square = new Object2d
         {
             Name = "RectTowerRight",
-            Type = Object2dTypes.Wall
+            Type = Object2dTypes.Wall,
+            Texture = Resources.TextureBrickRed
         };
         square.Points.Add(new Vector2f(1025, 150));
         square.Points.Add(new Vector2f(1100, 150));
@@ -56,7 +59,8 @@ public class World : Drawable
         square = new Object2d
         {
             Name = "RectLoongFrontMains",
-            Type = Object2dTypes.Wall
+            Type = Object2dTypes.Wall,
+            Texture = Resources.TextureBrick
         };
         square.Points.Add(new Vector2f(200, 150));
         square.Points.Add(new Vector2f(1025, 150));
@@ -70,7 +74,8 @@ public class World : Drawable
         square = new Object2d
         {
             Name = "RectVerticalLeft",
-            Type = Object2dTypes.Wall
+            Type = Object2dTypes.Wall,
+            Texture = Resources.TextureBrick
         };
         square.Points.Add(new Vector2f(150, 200));
         square.Points.Add(new Vector2f(175, 200));
@@ -82,7 +87,8 @@ public class World : Drawable
         square = new Object2d
         {
             Name = "RectVerticalRight",
-            Type = Object2dTypes.Wall
+            Type = Object2dTypes.Wall,
+            Texture = Resources.TextureBrick
         };
         square.Points.Add(new Vector2f(1050, 200));
         square.Points.Add(new Vector2f(1075, 200));
@@ -95,7 +101,8 @@ public class World : Drawable
         var circle2d = new Circle2d(50)
         {
             Name = "Circle",
-            Type = Object2dTypes.Wall
+            Type = Object2dTypes.Wall,
+            Texture = Resources.TextureColumn
         };
         circle2d.SetCenter(new Vector2f(325, 300));
         Objects.Add(circle2d);
@@ -104,7 +111,8 @@ public class World : Drawable
         square = new Object2d
         {
             Name = "SquareBigNordEast",
-            Type = Object2dTypes.Wall
+            Type = Object2dTypes.Wall,
+            Texture = Resources.TextureColumn
         };
         square.Points.Add(new Vector2f(850, 250));
         square.Points.Add(new Vector2f(950, 250));
@@ -116,7 +124,8 @@ public class World : Drawable
         square = new Object2d
         {
             Name = "SquareNordWest",
-            Type = Object2dTypes.Wall
+            Type = Object2dTypes.Wall,
+            Texture = Resources.TextureBrickRed
         };
         square.Points.Add(new Vector2f(450, 275));
         square.Points.Add(new Vector2f(500, 275));
@@ -141,7 +150,8 @@ public class World : Drawable
         {
             Name = "SquareSmallMiddle",
             Type = Object2dTypes.Wall,
-            Position = new Vector2f(575, 275)
+            Position = new Vector2f(575, 275),
+            Texture = Resources.TextureBrick
         };
         square.Points.Add(new Vector2f(0, 0));
         square.Points.Add(new Vector2f(50, 0));
@@ -154,7 +164,8 @@ public class World : Drawable
         square = new Object2d
         {
             Name = "SquareSmallNordEast",
-            Type = Object2dTypes.Wall
+            Type = Object2dTypes.Wall,
+            Texture = Resources.TextureBrick
         };
         square.Points.Add(new Vector2f(700, 275));
         square.Points.Add(new Vector2f(750, 275));
@@ -166,7 +177,8 @@ public class World : Drawable
         square = new Object2d
         {
             Name = "RectDown",
-            Type = Object2dTypes.Wall
+            Type = Object2dTypes.Wall,
+            Texture = Resources.TextureBrick
         };
         square.Points.Add(new Vector2f(250, 400));
         square.Points.Add(new Vector2f(450, 400));
@@ -179,7 +191,8 @@ public class World : Drawable
         square = new Object2d
         {
             Name = "Triangle",
-            Type = Object2dTypes.Wall
+            Type = Object2dTypes.Wall,
+            Texture = Resources.TextureBrick
         };
         square.Points.Add(new Vector2f(900, 400));
         square.Points.Add(new Vector2f(925, 475));

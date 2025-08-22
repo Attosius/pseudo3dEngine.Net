@@ -2,14 +2,12 @@
 using System.Diagnostics;
 using SFML.Graphics;
 using SFML.System;
-using SFML.Window;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace Pseudo3dEngine.DrawableObjects;
 
 public class CameraMan : Drawable
 {
-    public float DistanceView = 600f;
+    public float DistanceView = 1600f;
     public static int Counter = 0;
     public static int RaysCount = 1200;
     public List<long> Ticks = new(100);
@@ -195,15 +193,6 @@ public class CameraMan : Drawable
     }
 
 
-    public class CrossSegment
-    {
-        public (Vector2f first, Vector2f second)? Segment { get; set; }
-        public float Distance { get; set; }
-        public Object2d Obj { get; set; }
-        public int RaysOnSegment { get; set; }
-        public Vector2f CrossPoint { get; set; }
-    }
-
 
     private void DrawObjects(RenderTarget target, Person person)
     {
@@ -215,7 +204,6 @@ public class CameraMan : Drawable
 
         for (var i = 0; i < RaysCount; i++)
         {
-            var crossSegmentRet = new CrossSegment();
             var currentAngle = leftViewAngle - deltaRay * i;
             //while (currentAngle > Math.PI) currentAngle -= 2 * Math.PI;
             //while (currentAngle < -Math.PI) currentAngle += 2 * Math.PI;
@@ -237,7 +225,11 @@ public class CameraMan : Drawable
                         crossSegment = tempCrossSegment;
                         crossingObject = wordObject;
                         len = Math.Abs(Helper.DecartDistance(crossSegment.Value.second, point));
-
+                        if (wordObject is Circle2d circle2d) // todo move getlen into object
+                        {
+                            len = circle2d.GetArcLengthFromBegin(point);
+                        }
+                        //len = 125;
                     }
                 }
             }
@@ -269,9 +261,7 @@ public class CameraMan : Drawable
             objects3d.Points.Add(new Vector2f(xScreenLeft, yScreenMiddle + heightHalf));
             objects3d.OutlineThickness = 1;
             //crossingObject.LineList.Add(objects3d);
-
-
-            Resources.TextureBrick.Repeated = true;
+            
 
             var alpha = 255 * (1 - distanceToObject / DistanceView);
             if (alpha > 255)
@@ -279,10 +269,10 @@ public class CameraMan : Drawable
             if (alpha < 0)
                 alpha = 1;
             // len = 5, 11 - и все в начале идет, а надо сместить, увеличить лен до размера полотна. может брать процент от размера экрана
+            crossingObject.Texture.Repeated = true;
+            var horizonScale = crossingObject.Texture.Size.X / 50; // 50 - size of object in px to wear all texture
 
-            var horizonScale = Resources.TextureBrick.Size.X / 50; // 50 - size of object in px to wear all texture
-
-            var sprite = new Sprite(Resources.TextureBrick, new IntRect((int)(len * horizonScale), 0, (int)xWidth, (int)Resources.ScreenHeight));
+            var sprite = new Sprite(crossingObject.Texture, new IntRect((int)(len * horizonScale), 0, (int)xWidth, (int)Resources.ScreenHeight));
             sprite.Position = new Vector2f(xScreenLeft, yScreenMiddle - heightHalf);
             sprite.Scale = new Vector2f(1f, (float)(heightHalf * 2) / Resources.ScreenHeight);
             //sprite.Color = new Color(255, 255, 255, (byte)alpha);
